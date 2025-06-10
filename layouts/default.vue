@@ -1,7 +1,9 @@
 <template>
-  <div>
+  <UContainer class="min-h-screen flex flex-col px-0 sm:px-0 lg:px-0">
     <AppHeader />
-    <slot />
+    <div class="flex flex-col flex-1">
+      <slot />
+    </div>
     <AppFooter />
-  </div>
+  </UContainer>
 </template>

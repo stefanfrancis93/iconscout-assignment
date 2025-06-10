@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <footer class="flex flex-col items-center justify-center p-6 bg-white-400">
     <p>&copy; 2025 My Application. All rights reserved.</p>
     <nav>
       <ul>

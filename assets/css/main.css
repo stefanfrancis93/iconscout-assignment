@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme static {
+  --color-brand: #0092E4;
+  
+  --color-skeleton: #D9D9D9;
+
+  --color-white-400: rgba(235, 237, 245, 1);
+  --color-white-500: #D8DBEB;
+
+  --color-blue-500: #2F72BC;
+  --color-blue-600: #0058E3;
+
+  --color-gray-50: #B4BAD6;
+  --color-gray-100: #B5BAD4;
+  --color-gray-200: #636C7E;
+  --color-gray-300: #5A607D;
+  --color-gray-400: #424866;
+  --color-gray-500: #2E334C;
+  --color-gray-600: #1C2033;
+
+  --ui-primary: var(---color-brand-400);
+  --ui-text: var(--color-gray-400);
+  --ui-container: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-semibold;
+}
