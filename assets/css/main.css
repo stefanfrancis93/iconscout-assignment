@@ -3,7 +3,7 @@
 
 @theme static {
   --color-brand: #0092E4;
-  
+
   --color-skeleton: #D9D9D9;
 
   --color-white-400: rgba(235, 237, 245, 1);
@@ -20,6 +20,8 @@
   --color-gray-500: #2E334C;
   --color-gray-600: #1C2033;
 
+  --color-teal-500: #24A8AF;
+  
   --ui-primary: var(---color-brand-400);
   --ui-text: var(--color-gray-400);
   --ui-container: none;
