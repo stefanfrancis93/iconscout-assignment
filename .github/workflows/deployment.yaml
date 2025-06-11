@@ -34,3 +34,6 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           working-directory: .
           prod: true
+        env:
+          ICONSCOUT_API: ${{ secrets.ICONSCOUT_API }}
+          ICONSCOUT_CLIENT_ID: ${{ secrets.ICONSCOUT_CLIENT_ID }}
