@@ -8,9 +8,10 @@
     </a>
 
     <form
-      class="flex items-center flex-1 max-w-xl mx-6 bg-white-400 rounded-lg px-2.5 py-2 gap-[9px]"
+      class="flex items-center flex-1 max-w-xl mx-6 bg-white-400 rounded-lg px-2.5 py-2 gap-[9px] relative"
       role="search"
       aria-label="Asset search"
+      @submit.prevent="onSearchSubmit"
     >
       <label for="asset-search" class="sr-only">Search assets</label>
       <UButton
@@ -35,13 +36,32 @@
 
       <input
         id="asset-search"
+        v-model="searchQuery"
         name="search"
         type="text"
         placeholder="Search from 8 Million+ assets"
         class="flex-1 bg-transparent border-0 outline-none text-lg text-gray-800 placeholder-gray-500 px-2"
         aria-label="Search from 8 Million+ assets"
         autocomplete="off"
+        @focus="showRecent = true"
+        @blur="onBlur"
+        @keydown.enter="onSearchSubmit"
       >
+
+      <div v-if="showRecent && recentSearches.length" class="absolute left-0 top-full mt-2 w-full bg-white rounded-lg shadow-lg z-10 p-4 min-w-[350px]">
+        <div class="mb-2 font-semibold text-gray-900 text-base">Recent Search</div>
+        <div class="flex flex-wrap gap-2 mb-2">
+          <span
+            v-for="(item, idx) in recentSearches"
+            :key="item"
+            class="flex items-center bg-gray-100 text-gray-800 rounded-lg px-3 py-1 text-sm cursor-pointer hover:bg-gray-200"
+            @mousedown.prevent="triggerRecentSearch(item)"
+          >
+            {{ item }}
+            <button type="button" class="ml-1 text-gray-400 hover:text-gray-600" @mousedown.stop.prevent="removeRecent(idx)">&times;</button>
+          </span>
+        </div>
+      </div>
       <UButton
         type="button"
         class="ml-2 flex justify-center w-12 h-12 rounded-lg shadow-none focus:outline-none p-0 items-stretch"
@@ -107,3 +127,73 @@
     </div>
   </header>
 </template>
+
+<script setup lang="ts">
+const searchQuery = ref('')
+const router = useRouter()
+const route = useRoute()
+const showRecent = ref(false)
+const recentSearches = ref([])
+
+function loadRecent() {
+  try {
+    recentSearches.value = JSON.parse(localStorage.getItem('recentSearches') || '[]')
+  } catch {
+    recentSearches.value = []
+  }
+}
+
+function onSearchSubmit(e) {
+  if (e && typeof e.preventDefault === 'function') e.preventDefault()
+  const query = searchQuery.value.trim()
+  if (!query) return
+  let recent = []
+  try {
+    recent = JSON.parse(localStorage.getItem('recentSearches') || '[]')
+  } catch { /* empty */ }
+  recent = [query, ...recent.filter(q => q !== query)]
+  if (recent.length > 10) recent = recent.slice(0, 10)
+  localStorage.setItem('recentSearches', JSON.stringify(recent))
+  loadRecent()
+  showRecent.value = false
+  router.push(`/3d-illustrations/${encodeURIComponent(query)}`)
+}
+
+function removeRecent(idx) {
+  recentSearches.value.splice(idx, 1)
+  localStorage.setItem('recentSearches', JSON.stringify(recentSearches.value))
+}
+
+function onBlur(_e) {
+  // Delay hiding so button click can register
+  setTimeout(() => { showRecent.value = false }, 120)
+}
+
+function triggerRecentSearch(item) {
+  searchQuery.value = item
+  onSearchSubmit()
+}
+
+onBeforeMount(() => {
+  const path = route.path
+  let query = ''
+  const match = path.match(/^\/(all-assets|3d-illustrations|lottie-animations|illustrations|icons|ai-images)\/(.+)$/)
+  if (match && match[2]) {
+    query = decodeURIComponent(match[2])
+    searchQuery.value = query
+  }
+  // If query exists, store it as a recent search if not already present
+  if (query) {
+    let recent = []
+    try {
+      recent = JSON.parse(localStorage.getItem('recentSearches') || '[]')
+    } catch { /* empty */ }
+    if (!recent.includes(query)) {
+      recent = [query, ...recent]
+      if (recent.length > 10) recent = recent.slice(0, 10)
+      localStorage.setItem('recentSearches', JSON.stringify(recent))
+    }
+  }
+  loadRecent()
+})
+</script>
