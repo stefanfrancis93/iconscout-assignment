@@ -32,8 +32,8 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
           working-directory: .
-          prod: true
         env:
-          ICONSCOUT_API: ${{ secrets.ICONSCOUT_API }}
+          ICONSCOUT_API_BASE: ${{ secrets.ICONSCOUT_API_BASE }}
           ICONSCOUT_CLIENT_ID: ${{ secrets.ICONSCOUT_CLIENT_ID }}
