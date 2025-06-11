@@ -1,10 +1,9 @@
-// composables/useAssetType.ts
 /**
  * Returns the asset type string for a given Nuxt dynamic slug array.
  * @param slugArr - The slug array from route.params.slug
  * @returns Asset type string or undefined
  */
-export function useAssetType(
+export function getAssetType(
   slugArr: string[] | string | undefined
 ): string | undefined {
   const tab = Array.isArray(slugArr) && slugArr.length > 0 ? slugArr[0] : "";
