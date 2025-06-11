@@ -1,6 +1,5 @@
-const ICONSCOUT_API =
-  process.env.ICONSCOUT_API || "https://api.iconscout.com/v3/search";
-const CLIENT_ID = process.env.ICONSCOUT_CLIENT_ID;
+const ICONSCOUT_API = "https://api.iconscout.com/v3/search";
+const CLIENT_ID = '255104126043536';
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
