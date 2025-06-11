@@ -92,15 +92,70 @@
           </li>
         </ul>
     </div>
+    <div>
+      <div>
+        <template v-if="pending">
+          <div class="py-10 text-center text-gray-400">Loading assets...</div>
+        </template>
+        <template v-else-if="error">
+          <div class="py-10 text-center text-red-500">Failed to load assets.</div>
+        </template>
+        <template v-else-if="assets && assets.data && assets.data.length">
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
+            <div v-for="item in assets.data" :key="item.id" class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+              <img
+                v-if="item.urls && (item.urls.thumb || item.urls.png_256 || item.urls.png_128 || item.urls.png_64)"
+                :src="item.urls.thumb || item.urls.png_256 || item.urls.png_128 || item.urls.png_64"
+                :alt="item.name || 'Asset'"
+                class="w-32 h-32 object-contain mb-2"
+              >
+              <div class="text-center text-sm font-medium text-gray-800 truncate w-full">{{ item.name }}</div>
+            </div>
+          </div>
+        </template>
+        <template v-else>
+          <div class="py-10 text-center text-gray-400">No assets found.</div>
+        </template>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router'
-const route = useRoute()
 
+const route = useRoute()
 const slug = route.params.slug || [];
 const query = (Array.isArray(slug) && slug.length > 1) ? slug[1] : '';
+
+function getAssetType(slugArr) {
+  const tab = Array.isArray(slugArr) && slugArr.length > 0 ? slugArr[0] : '';
+  switch (tab) {
+    case '3d-illustrations':
+      return '3d';
+    case 'lottie-animations':
+      return 'lottie';
+    case 'illustrations':
+      return 'illustration';
+    case 'icons':
+      return 'icon';
+    case 'all-assets':
+    case 'kit-illustrations':
+    case 'ai-images':
+    default:
+      return undefined; // undefined means all assets
+  }
+}
+
+const assetType = getAssetType(slug);
+
+const { data: assets, pending, error } = await useFetch('/api/assets', {
+  query: {
+    query: query,
+    product_type: 'item',
+    asset: assetType,
+  },
+  key: `assets-${assetType || 'all'}-${query}`,
+})
 
 function tabClass(base) {
   const re = new RegExp(`^${base}(/|$)`)
