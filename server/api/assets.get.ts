@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     query: searchQuery,
     product_type,
     asset,
-    per_page = "10",
+    per_page = "25",
     page = "1",
     sort = "relevant",
   } = query;

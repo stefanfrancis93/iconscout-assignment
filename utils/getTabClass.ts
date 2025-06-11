@@ -20,7 +20,7 @@ export function getTabClass(
   const activeClass =
     "text-black font-bold relative after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-[-11px] after:border-b-2 after:border-black";
 
-  const defaultFilterSelected = base === "/all-assets" && query === "";
+  const defaultFilterSelected = isActive && base === "/all-assets" && query === "";
   
   return (isActive || defaultFilterSelected) ? `${baseClass} ${activeClass}` : baseClass;
 }
