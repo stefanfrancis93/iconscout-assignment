@@ -48,8 +48,13 @@
         @keydown.enter="onSearchSubmit"
       >
 
-      <div v-if="showRecent && recentSearches.length" class="absolute left-0 top-full mt-2 w-full bg-white rounded-lg shadow-lg z-10 p-4 min-w-[350px]">
-        <div class="mb-2 font-semibold text-gray-900 text-base">Recent Search</div>
+      <div
+        v-if="showRecent && recentSearches.length"
+        class="absolute left-0 top-full mt-2 w-full bg-white rounded-lg shadow-lg z-10 p-4 min-w-[350px]"
+      >
+        <div class="mb-2 font-semibold text-gray-900 text-base">
+          Recent Search
+        </div>
         <div class="flex flex-wrap gap-2 mb-2">
           <span
             v-for="(item, idx) in recentSearches"
@@ -58,7 +63,13 @@
             @mousedown.prevent="triggerRecentSearch(item)"
           >
             {{ item }}
-            <button type="button" class="ml-1 text-gray-400 hover:text-gray-600" @mousedown.stop.prevent="removeRecent(idx)">&times;</button>
+            <button
+              type="button"
+              class="ml-1 text-gray-400 hover:text-gray-600"
+              @mousedown.stop.prevent="removeRecent(idx)"
+            >
+              &times;
+            </button>
           </span>
         </div>
       </div>
@@ -67,11 +78,7 @@
         class="ml-2 flex justify-center w-12 h-12 rounded-lg shadow-none focus:outline-none p-0 items-stretch"
         aria-label="Open asset search options"
       >
-        <img
-          src="/reverse-image-search.svg"
-          alt="Reverse Image Search"
-          class="w-[170]"
-        >
+        <img src="/reverse-image-search.svg" alt="Reverse Image Search" >
       </UButton>
     </form>
 
@@ -80,13 +87,13 @@
         <li>
           <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
             Explore
-            <img src="/angle-down.svg" alt="Explore" class="w-[170]" >
+            <img src="/angle-down.svg" alt="Explore" >
           </UButton>
         </li>
         <li>
           <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
             Tools
-            <img src="/angle-down.svg" alt="Tools" class="w-[170]" >
+            <img src="/angle-down.svg" alt="Tools" >
           </UButton>
         </li>
         <li>
@@ -96,14 +103,14 @@
         </li>
         <li>
           <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
-            <img src="/gift.svg" alt="Free Asset" class="w-[170]" >
+            <img src="/gift.svg" alt="Free Asset" >
             Free Asset
           </UButton>
         </li>
         <li>
           <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
             Learn
-            <img src="/angle-down.svg" alt="Learn" class="w-[170]" >
+            <img src="/angle-down.svg" alt="Learn" >
           </UButton>
         </li>
       </ul>
@@ -129,71 +136,81 @@
 </template>
 
 <script setup lang="ts">
-const searchQuery = ref('')
-const router = useRouter()
-const route = useRoute()
-const showRecent = ref(false)
-const recentSearches = ref([])
+const searchQuery = ref("");
+const router = useRouter();
+const route = useRoute();
+const showRecent = ref(false);
+const recentSearches = ref([]);
 
 function loadRecent() {
   try {
-    recentSearches.value = JSON.parse(localStorage.getItem('recentSearches') || '[]')
+    recentSearches.value = JSON.parse(
+      localStorage.getItem("recentSearches") || "[]"
+    );
   } catch {
-    recentSearches.value = []
+    recentSearches.value = [];
   }
 }
 
 function onSearchSubmit(e) {
-  if (e && typeof e.preventDefault === 'function') e.preventDefault()
-  const query = searchQuery.value.trim()
-  if (!query) return
-  let recent = []
+  if (e && typeof e.preventDefault === "function") e.preventDefault();
+  const query = searchQuery.value.trim();
+  if (!query) return;
+  let recent = [];
   try {
-    recent = JSON.parse(localStorage.getItem('recentSearches') || '[]')
-  } catch { /* empty */ }
-  recent = [query, ...recent.filter(q => q !== query)]
-  if (recent.length > 10) recent = recent.slice(0, 10)
-  localStorage.setItem('recentSearches', JSON.stringify(recent))
-  loadRecent()
-  showRecent.value = false
-  router.push(`/3d-illustrations/${encodeURIComponent(query)}`)
+    recent = JSON.parse(localStorage.getItem("recentSearches") || "[]");
+  } catch {
+    /* empty */
+  }
+  recent = [query, ...recent.filter((q) => q !== query)];
+  if (recent.length > 10) recent = recent.slice(0, 10);
+  localStorage.setItem("recentSearches", JSON.stringify(recent));
+  loadRecent();
+  showRecent.value = false;
+  router.push(`/3d-illustrations/${encodeURIComponent(query)}`);
 }
 
 function removeRecent(idx) {
-  recentSearches.value.splice(idx, 1)
-  localStorage.setItem('recentSearches', JSON.stringify(recentSearches.value))
+  recentSearches.value.splice(idx, 1);
+  localStorage.setItem("recentSearches", JSON.stringify(recentSearches.value));
 }
 
 function onBlur(_e) {
   // Delay hiding so button click can register
-  setTimeout(() => { showRecent.value = false }, 120)
+  setTimeout(() => {
+    showRecent.value = false;
+  }, 120);
 }
 
 function triggerRecentSearch(item) {
-  searchQuery.value = item
-  onSearchSubmit()
+  searchQuery.value = item;
+  onSearchSubmit();
 }
 
 onBeforeMount(() => {
-  const path = route.path
-  let query = ''
-  const match = path.match(/^\/(all-assets|3d-illustrations|lottie-animations|illustrations|icons|ai-images)\/(.+)$/)
+  const path = route.path;
+  let query = "";
+  const match = path.match(
+    /^\/(all-assets|3d-illustrations|lottie-animations|illustrations|icons|ai-images)\/(.+)$/
+  );
   if (match && match[2]) {
-    query = decodeURIComponent(match[2])
-    searchQuery.value = query
+    query = decodeURIComponent(match[2]);
+    searchQuery.value = query;
   }
   // If query exists, store it as a recent search if not already present
   if (query) {
-    let recent = []
+    let recent = [];
     try {
-      recent = JSON.parse(localStorage.getItem('recentSearches') || '[]')
-    } catch { /* empty */ }
+      recent = JSON.parse(localStorage.getItem("recentSearches") || "[]");
+    } catch {
+      /* empty */
+    }
     if (!recent.includes(query)) {
-      recent = [query, ...recent]
-      if (recent.length > 10) recent = recent.slice(0, 10)
-      localStorage.setItem('recentSearches', JSON.stringify(recent))
+      recent = [query, ...recent];
+      if (recent.length > 10) recent = recent.slice(0, 10);
+      localStorage.setItem("recentSearches", JSON.stringify(recent));
     }
   }
-  loadRecent()
-})
+  loadRecent();
+});
 </script>

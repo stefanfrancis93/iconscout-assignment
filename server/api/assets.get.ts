@@ -1,5 +1,5 @@
 const API_BASE = process.env.ICONSCOUT_API_BASE;
-const CLIENT_ID = process.env.NUXT_ICONSCOUT_CLIENT_ID;
+const CLIENT_ID = process.env.ICONSCOUT_CLIENT_ID;
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
