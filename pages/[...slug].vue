@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/html-self-closing -->
 <template>
   <div>
     <div class="flex flex-col pt-6 pl-10">
@@ -13,10 +14,14 @@
           class="flex justify-between gap-2 text-md text-gray-500 w-full h-12"
         >
           <span class="flex items-center gap-2">
-            <img src="/filter.svg" alt="Filters" class="size-6" >
+            <span class="size-6">
+              <img src="/filter.svg" alt="Filters" class="size-6" />
+            </span>
             Filters
           </span>
-          <img src="/close.svg" alt="Close" class="size-6" >
+          <span class="size-6">
+            <img src="/close.svg" alt="Close" class="size-6" />
+          </span>
         </UButton>
       </div>
       <ul
@@ -142,7 +147,7 @@
                   "
                   :alt="item.name"
                   class="w-32 h-32 object-contain mb-2"
-                >
+                />
               </template>
               <div
                 class="text-center text-sm font-medium text-gray-800 truncate w-full"
@@ -161,28 +166,21 @@
 </template>
 
 <script setup lang="ts">
+import { useAssetType } from "~/composables/useAssetType";
+import { useTabClass } from "~/composables/useTabClass";
+
 const route = useRoute();
-const slug = route.params.slug || [];
-const query = Array.isArray(slug) && slug.length > 1 ? slug[1] : "";
+const slug: string[] = (route.params.slug as string[]) || [];
+const query: string = Array.isArray(slug) && slug.length > 1 ? slug[1] : "";
 
-function getAssetType(slugArr) {
-  const tab = Array.isArray(slugArr) && slugArr.length > 0 ? slugArr[0] : "";
-  switch (tab) {
-    case "3d-illustrations":
-      return "3d";
-    case "lottie-animations":
-      return "lottie";
-    case "illustrations":
-      return "illustration";
-    case "icons":
-      return "icon";
-    default:
-      return undefined; // undefined means all assets
-  }
-}
+/**
+ * The asset type for the current route, derived from the slug.
+ */
+const assetType: string | undefined = useAssetType(slug);
 
-const assetType = getAssetType(slug);
-
+/**
+ * Fetches assets from the API based on the current query and asset type.
+ */
 const {
   data: assets,
   pending,
@@ -196,16 +194,12 @@ const {
   key: `assets-${assetType || "all"}-${query}`,
 });
 
-function tabClass(base) {
-  const re = new RegExp(`^${base}(/|$)`);
-
-  const path =
-    Array.isArray(slug) && slug.length > 0 ? `/${slug[0]}` : route.path;
-  const isActive = re.test(path);
-  const baseClass =
-    "text-sm px-0 py-0 bg-transparent border-none shadow-none transition-colors duration-150 font-semibold text-blue-500";
-  const activeClass =
-    "text-black font-bold relative after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-[-11px] after:border-b-2 after:border-black";
-  return isActive ? `${baseClass} ${activeClass}` : baseClass;
+/**
+ * Returns the tab CSS class string for navigation tabs based on the current route/slug.
+ * @param base - The base path for the tab (e.g. '/all-assets')
+ * @returns The computed class string for the tab
+ */
+function tabClass(base: string): string {
+  return useTabClass(base, slug, route.path);
 }
 </script>

@@ -1,10 +1,15 @@
+<!-- eslint-disable vue/html-self-closing -->
 <template>
   <header
     class="flex items-center justify-between px-6 py-3 bg-white shadow-[0px_6px_16px_0px_rgba(0,_0,_0,_0.08)]"
     role="banner"
   >
-    <a href="/" class="flex items-center gap-2" aria-label="IconScout Home">
-      <img src="/logo.svg" alt="IconScout Logo" class="w-[170]" >
+    <a
+      href="/"
+      class="flex items-center gap-2 w-[170px]"
+      aria-label="IconScout Home"
+    >
+      <img src="/logo.svg" alt="IconScout Logo" class="w-[170px]" />
     </a>
 
     <form
@@ -31,8 +36,9 @@
           <path d="M19 9l-7 7-7-7" />
         </svg>
       </UButton>
-      <span class="h-8 w-px bg-[#C7CCE2] mx-2" />
-      <img src="/search.svg" alt="Search" class="size-6" >
+      <span class="h-8 w-px bg-[#C7CCE2] mx-2 size-6">
+        <img src="/search.svg" alt="Search" class="size-6" />
+      </span>
 
       <input
         id="asset-search"
@@ -46,7 +52,7 @@
         @focus="showRecent = true"
         @blur="onBlur"
         @keydown.enter="onSearchSubmit"
-      >
+      />
 
       <div
         v-if="showRecent && recentSearches.length"
@@ -75,10 +81,14 @@
       </div>
       <UButton
         type="button"
-        class="ml-2 flex justify-center w-12 h-12 rounded-lg shadow-none focus:outline-none p-0 items-stretch"
+        class="ml-2 flex justify-center w-12 h-12 rounded-lg shadow-none focus:outline-none m-0 p-0 size-12"
         aria-label="Open asset search options"
       >
-        <img src="/reverse-image-search.svg" alt="Reverse Image Search" >
+        <img
+          src="/reverse-image-search.svg"
+          alt="Reverse Image Search"
+          class="size-12"
+        />
       </UButton>
     </form>
 
@@ -87,13 +97,17 @@
         <li>
           <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
             Explore
-            <img src="/angle-down.svg" alt="Explore" >
+            <span class="size-4"
+              ><img class="size-4" src="/angle-down.svg" alt="Explore"
+            /></span>
           </UButton>
         </li>
         <li>
           <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
             Tools
-            <img src="/angle-down.svg" alt="Tools" >
+            <span class="size-4"
+              ><img class="size-4" src="/angle-down.svg" alt="Tools"
+            /></span>
           </UButton>
         </li>
         <li>
@@ -103,14 +117,18 @@
         </li>
         <li>
           <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
-            <img src="/gift.svg" alt="Free Asset" >
+            <span class="size-4"
+              ><img class="size-4" src="/gift.svg" alt="Free Asset"
+            /></span>
             Free Asset
           </UButton>
         </li>
         <li>
           <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
             Learn
-            <img src="/angle-down.svg" alt="Learn" >
+            <span class="size-4"
+              ><img class="size-4" src="/angle-down.svg" alt="Learn"
+            /></span>
           </UButton>
         </li>
       </ul>
@@ -136,81 +154,15 @@
 </template>
 
 <script setup lang="ts">
-const searchQuery = ref("");
-const router = useRouter();
-const route = useRoute();
-const showRecent = ref(false);
-const recentSearches = ref([]);
+import { useSearchQuery } from "~/composables/useSearchQuery";
 
-function loadRecent() {
-  try {
-    recentSearches.value = JSON.parse(
-      localStorage.getItem("recentSearches") || "[]"
-    );
-  } catch {
-    recentSearches.value = [];
-  }
-}
-
-function onSearchSubmit(e) {
-  if (e && typeof e.preventDefault === "function") e.preventDefault();
-  const query = searchQuery.value.trim();
-  if (!query) return;
-  let recent = [];
-  try {
-    recent = JSON.parse(localStorage.getItem("recentSearches") || "[]");
-  } catch {
-    /* empty */
-  }
-  recent = [query, ...recent.filter((q) => q !== query)];
-  if (recent.length > 10) recent = recent.slice(0, 10);
-  localStorage.setItem("recentSearches", JSON.stringify(recent));
-  loadRecent();
-  showRecent.value = false;
-  router.push(`/3d-illustrations/${encodeURIComponent(query)}`);
-}
-
-function removeRecent(idx) {
-  recentSearches.value.splice(idx, 1);
-  localStorage.setItem("recentSearches", JSON.stringify(recentSearches.value));
-}
-
-function onBlur(_e) {
-  // Delay hiding so button click can register
-  setTimeout(() => {
-    showRecent.value = false;
-  }, 120);
-}
-
-function triggerRecentSearch(item) {
-  searchQuery.value = item;
-  onSearchSubmit();
-}
-
-onBeforeMount(() => {
-  const path = route.path;
-  let query = "";
-  const match = path.match(
-    /^\/(all-assets|3d-illustrations|lottie-animations|illustrations|icons|ai-images)\/(.+)$/
-  );
-  if (match && match[2]) {
-    query = decodeURIComponent(match[2]);
-    searchQuery.value = query;
-  }
-  // If query exists, store it as a recent search if not already present
-  if (query) {
-    let recent = [];
-    try {
-      recent = JSON.parse(localStorage.getItem("recentSearches") || "[]");
-    } catch {
-      /* empty */
-    }
-    if (!recent.includes(query)) {
-      recent = [query, ...recent];
-      if (recent.length > 10) recent = recent.slice(0, 10);
-      localStorage.setItem("recentSearches", JSON.stringify(recent));
-    }
-  }
-  loadRecent();
-});
+const {
+  searchQuery,
+  showRecent,
+  recentSearches,
+  onSearchSubmit,
+  removeRecent,
+  onBlur,
+  triggerRecentSearch,
+} = useSearchQuery();
 </script>
