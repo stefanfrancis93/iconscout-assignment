@@ -12,19 +12,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      # TODO: Move the build steps to github actions
+      # - name: Checkout code
+      #   uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 20
 
-      - name: Install dependencies (Yarn CI)
-        run: yarn install --frozen-lockfile
+      # - name: Install dependencies (Yarn CI)
+      #   run: yarn install --frozen-lockfile
 
-      - name: Build project
-        run: yarn build
+      # - name: Build project
+      #   run: yarn build
 
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
