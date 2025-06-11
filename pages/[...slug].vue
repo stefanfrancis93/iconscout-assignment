@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/html-self-closing -->
 <template>
   <div>
     <div class="flex flex-col pt-6 pl-10">
