@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <div class="flex flex-col pt-6 pl-10">
@@ -27,12 +26,7 @@
       <SearchFilters :slug="slug" :query="query" :route-path="route.path" />
     </div>
     <div>
-      <SearchResults
-        :slug="slug"
-        :query="query"
-        :page="page"
-        @load-more="handleLoadMore"
-      />
+      <SearchResults :slug="slug" :query="query" />
     </div>
   </div>
 </template>
@@ -41,9 +35,4 @@
 const route = useRoute();
 const slug: string[] = (route.params.slug as string[]) || [];
 const query: string = Array.isArray(slug) && slug.length > 1 ? slug[1] : "";
-
-const page = ref(1);
-function handleLoadMore() {
-  page.value += 1;
-}
 </script>

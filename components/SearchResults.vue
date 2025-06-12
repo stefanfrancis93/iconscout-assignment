@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="status === 'pending'">
+    <template v-if="status === 'idle' || status === 'pending'">
       <div
         class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 px-10 py-6"
       >
@@ -28,134 +28,35 @@
 </template>
 
 <script setup lang="ts">
-import { getAssetType } from "~/utils/getAssetType";
+import { useIntersectionObserver } from "~/composables/useIntersectionObserver";
+import { usePaginatedAssets } from "~/composables/usePaginatedAssets";
 
 const props = defineProps<{
   slug: string[];
   query: string;
-  page: number;
 }>();
-
-const assetType: string | undefined = getAssetType(props.slug);
-
-const assets = ref<any[]>([]);
-const status = ref<"idle" | "pending" | "success" | "error">("idle");
-const loadingMoreStatus = ref<"idle" | "pending" | "success" | "error">("idle");
-const error = ref<any>(null);
-const pagination = ref<{ current_page: number; last_page: number } | null>(
-  null
-);
-
-async function fetchAssets(page = 1) {
-  if (page === 1) {
-    status.value = "pending";
-  } else {
-    loadingMoreStatus.value = "pending";
-  }
-  error.value = null;
-  try {
-    const { data } = await useFetch("/api/assets", {
-      query: {
-        query: props.query,
-        product_type: "item",
-        asset: assetType,
-        page,
-      },
-      key: `assets-${assetType || "all"}-${props.query}-${page}`,
-    });
-    if (data.value) {
-      if (page === 1) {
-        assets.value = data.value.data || [];
-      } else {
-        assets.value = [...assets.value, ...(data.value.data || [])];
-      }
-      pagination.value = data.value.pagination;
-      if (page === 1) {
-        status.value = "success";
-      } else {
-        loadingMoreStatus.value = "success";
-      }
-    } else {
-      if (page === 1) {
-        status.value = "error";
-      } else {
-        loadingMoreStatus.value = "error";
-      }
-    }
-  } catch (e) {
-    error.value = e;
-    if (page === 1) {
-      status.value = "error";
-    } else {
-      loadingMoreStatus.value = "error";
-    }
-  }
-}
-
-watch(
-  () => [props.query, assetType],
-  () => {
-    fetchAssets(1);
-  },
-  { immediate: true }
-);
-
-watch(
-  () => props.page,
-  (newPage, oldPage) => {
-    if (newPage > 1 && newPage !== oldPage) {
-      fetchAssets(newPage);
-    }
-  }
-);
-
-// Infinite scroll: use Intersection Observer on sentinel
-const emit = defineEmits(["load-more"]);
 const sentinel = ref<HTMLElement | null>(null);
-let observer: IntersectionObserver | null = null;
 
-function emitLoadMore() {
-  emit("load-more");
-}
+const { assets, status, loadingMoreStatus, error, pagination, currentPage } =
+  usePaginatedAssets(props);
 
-function setupObserver() {
-  if (observer) {
-    observer.disconnect();
-  }
-  observer = new window.IntersectionObserver(
-    (entries) => {
-      if (
-        entries[0].isIntersecting &&
-        status.value !== "pending" &&
-        loadingMoreStatus.value !== "pending" &&
-        pagination.value &&
-        pagination.value.current_page < pagination.value.last_page
-      ) {
-        emitLoadMore();
-      }
-    },
-    {
-      root: null,
-      rootMargin: "400px",
-      threshold: 0.01,
+useIntersectionObserver(
+  sentinel,
+  () => {
+    if (
+      status.value !== "pending" &&
+      loadingMoreStatus.value !== "pending" &&
+      pagination.value !== null &&
+      pagination.value.current_page < pagination.value.last_page
+    ) {
+      currentPage.value += 1;
     }
-  );
-  if (sentinel.value) {
-    observer.observe(sentinel.value);
-  }
-}
-
-onMounted(() => {
-  setupObserver();
-});
-
-onUnmounted(() => {
-  if (observer) {
-    observer.disconnect();
-  }
-});
-
-watch(sentinel, () => {
-  setupObserver();
-});
+  },
+  { root: null, rootMargin: "400px", threshold: 0.01 },
+  () =>
+    status.value !== "pending" &&
+    loadingMoreStatus.value !== "pending" &&
+    pagination.value !== null &&
+    pagination.value.current_page < pagination.value.last_page
+);
 </script>

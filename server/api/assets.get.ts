@@ -1,3 +1,8 @@
+import type {
+  Asset,
+  GetAssetsResponse,
+} from "~/composables/usePaginatedAssets";
+
 const API_BASE = process.env.ICONSCOUT_API_BASE;
 const CLIENT_ID = process.env.ICONSCOUT_CLIENT_ID;
 
@@ -26,7 +31,24 @@ export default defineEventHandler(async (event) => {
   headers.set("accept", "application/json");
   if (CLIENT_ID) headers.set("Client-ID", CLIENT_ID);
 
-  let data;
+  // Define the expected structure for the IconScout API response
+  interface IconScoutApiResponse {
+    status: string;
+    message?: string;
+    response?: {
+      items?: {
+        data?: Asset[];
+        current_page: number;
+        per_page: number;
+        total: number;
+        last_page: number;
+        next_page_url: string | null;
+        prev_page_url: string | null;
+      };
+    };
+  }
+
+  let data: IconScoutApiResponse;
   try {
     const res = await fetch(url.toString(), {
       headers,
@@ -44,9 +66,10 @@ export default defineEventHandler(async (event) => {
     data = await res.json();
     const items = data.response?.items;
 
-    return {
+    // Type assertion for output
+    const response: GetAssetsResponse = {
       status: data.status,
-      data: items?.data || [],
+      data: (items?.data || []) as Asset[],
       pagination: items
         ? {
             current_page: items.current_page,
@@ -57,9 +80,9 @@ export default defineEventHandler(async (event) => {
             prev_page_url: items.prev_page_url,
           }
         : null,
-      meta: data.meta || null,
       message: data.message || null,
     };
+    return response;
   } catch (err) {
     console.error("API fetch error:", err);
     throw createError({
