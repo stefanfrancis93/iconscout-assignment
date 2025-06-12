@@ -31,6 +31,15 @@ export default defineNuxtConfig({
         "IconScout: 11.4 Million+ Design Assets - SVGs, Icons, Illustrations, 3D, Lottie",
       meta: [
         {
+          name: "google-site-verification",
+          content: "Jd_4SOtiHifYSlrocqD8-eycsGanGBfikbryFLTdkN0",
+        },
+        {
+          name: "title",
+          content:
+            "IconScout: 11.4 Million+ Design Assets - SVGs, Icons, Illustrations, 3D, Lottie",
+        },
+        {
           name: "description",
           content:
             "Curated SVGs, Vector Icons, Illustrations, 3D Graphics, and Lottie Animations. Over 10,000+ new assets added every day. Integrated plugins, tools, editors, and more.",
