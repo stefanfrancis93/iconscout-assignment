@@ -1,2 +1,7 @@
-User-Agent: *
-Disallow:
+User-agent: *
+Allow: /
+
+Host: iconscout-assignment.vercel.app
+Sitemap: https://iconscout-assignment.vercel.app/sitemap.xml
+
+Disallow: /api/
