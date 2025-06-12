@@ -28,8 +28,6 @@
 </template>
 
 <script setup lang="ts">
-import AssetSkeleton from "~/components/AssetSkeleton.vue";
-import AssetCard from "~/components/AssetCard.vue";
 import { getAssetType } from "~/utils/getAssetType";
 
 const props = defineProps<{

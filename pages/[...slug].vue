@@ -38,9 +38,6 @@
 </template>
 
 <script setup lang="ts">
-import SearchFilters from "~/components/SearchFilters.vue";
-import SearchResults from "~/components/SearchResults.vue";
-
 const route = useRoute();
 const slug: string[] = (route.params.slug as string[]) || [];
 const query: string = Array.isArray(slug) && slug.length > 1 ? slug[1] : "";
