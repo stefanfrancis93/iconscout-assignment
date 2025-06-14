@@ -1,8 +1,15 @@
 <template>
   <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
     <template v-if="item && item.urls">
+      <DotLottieVue
+        v-if="item.urls.lottie"
+        :src="item.urls.lottie"
+        :autoplay="true"
+        :loop="true"
+        style="width: 8rem; height: 8rem; margin-bottom: 0.5rem"
+      />
       <video
-        v-if="item.urls.thumb && item.urls.thumb.endsWith('.mp4')"
+        v-else-if="item.urls.thumb && item.urls.thumb.endsWith('.mp4')"
         :src="item.urls.thumb"
         autoplay
         loop
@@ -34,19 +41,11 @@
 </template>
 
 <script setup lang="ts">
-interface AssetItem {
-  id: string;
-  name: string;
-  urls: {
-    thumb?: string;
-    png_256?: string;
-    png_128?: string;
-    png_64?: string;
-  };
-}
+import { DotLottieVue } from "@lottiefiles/dotlottie-vue";
+import type { Asset } from "~/shared/types/assets";
 
 interface Props {
-  item: AssetItem;
+  item: Asset;
 }
 
 defineProps<Props>();

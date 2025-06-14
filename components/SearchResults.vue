@@ -1,29 +1,26 @@
 <template>
   <div>
-    <template v-if="status === 'idle' || status === 'pending'">
-      <div
-        class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 px-10 py-6"
-      >
-        <AssetSkeleton v-for="n in 25" :key="n" />
-      </div>
-    </template>
-    <template v-else-if="error">
-      <div class="py-10 text-center text-red-500">Failed to load assets.</div>
-    </template>
+    <div
+      v-if="status === 'pending'"
+      class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 px-10 py-6"
+    >
+      <AssetSkeleton v-for="n in 25" :key="n" />
+    </div>
+    <div v-else-if="error" class="py-10 text-center text-red-500">
+      Failed to load assets.
+    </div>
     <template v-else-if="assets && assets.length">
       <div
         class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 px-10 py-6"
       >
-        <AssetCard v-for="item in assets" :key="item.id" :item="item" />
+        <AssetCard v-for="(item, index) in assets" :key="`${item.id}-${index}`" :item="item" />
       </div>
       <div ref="sentinel" style="height: 1px"></div>
       <div v-if="loadingMoreStatus === 'pending'" class="text-center py-4">
         Loading more...
       </div>
     </template>
-    <template v-else>
-      <div class="py-10 text-center text-gray-400">No assets found.</div>
-    </template>
+    <div v-else class="py-10 text-center text-gray-400">No assets found.</div>
   </div>
 </template>
 

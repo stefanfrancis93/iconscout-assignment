@@ -2,6 +2,7 @@ import type {
   Asset,
   GetAssetsResponse,
 } from "~/composables/usePaginatedAssets";
+import { lottieData } from "../mockData.lottie";
 
 const API_BASE = process.env.ICONSCOUT_API_BASE;
 const CLIENT_ID = process.env.ICONSCOUT_CLIENT_ID;
@@ -69,7 +70,7 @@ export default defineEventHandler(async (event) => {
     // Type assertion for output
     const response: GetAssetsResponse = {
       status: data.status,
-      data: (items?.data || []) as Asset[],
+      data: (asset === "lottie" ? lottieData : items?.data || []) as Asset[],
       pagination: items
         ? {
             current_page: items.current_page,
