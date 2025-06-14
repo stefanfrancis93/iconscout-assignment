@@ -32,7 +32,6 @@ export default defineEventHandler(async (event) => {
   headers.set("accept", "application/json");
   if (CLIENT_ID) headers.set("Client-ID", CLIENT_ID);
 
-  // Define the expected structure for the IconScout API response
   interface IconScoutApiResponse {
     status: string;
     message?: string;
@@ -67,7 +66,6 @@ export default defineEventHandler(async (event) => {
     data = await res.json();
     const items = data.response?.items;
 
-    // Type assertion for output
     const response: GetAssetsResponse = {
       status: data.status,
       data: (asset === "lottie" ? lottieData : items?.data || []) as Asset[],

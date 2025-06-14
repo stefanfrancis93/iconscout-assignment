@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div :class="`flex flex-1 flex-col ${assetType}`">
     <div
       v-if="status === 'pending'"
-      class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 px-10 py-6"
+      class="asset-grid"
     >
       <AssetSkeleton v-for="n in 25" :key="n" />
     </div>
@@ -11,9 +11,15 @@
     </div>
     <template v-else-if="assets && assets.length">
       <div
-        class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 px-10 py-6"
+        class="asset-grid"
       >
-        <AssetCard v-for="(item, index) in assets" :key="`${item.id}-${index}`" :item="item" />
+        <div
+          v-for="(item, index) in assets"
+          :key="`${item.id}-${index}`"
+          class="flex h-full"
+        >
+          <AssetCard :item="item" />
+        </div>
       </div>
       <div ref="sentinel" style="height: 1px"></div>
       <div v-if="loadingMoreStatus === 'pending'" class="text-center py-4">
@@ -34,7 +40,7 @@ const props = defineProps<{
 }>();
 const sentinel = ref<HTMLElement | null>(null);
 
-const { assets, status, loadingMoreStatus, error, pagination, currentPage } =
+const { assetType, assets, status, loadingMoreStatus, error, pagination, currentPage } =
   usePaginatedAssets(props);
 
 useIntersectionObserver(
@@ -57,3 +63,26 @@ useIntersectionObserver(
     pagination.value.current_page < pagination.value.last_page
 );
 </script>
+
+<style scoped>
+.asset-grid {
+  display: grid;
+  gap: 0.75rem;
+  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+@media (max-width: 1023.98px) {
+  .asset-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+.icon .asset-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: .25rem;
+}
+@media (max-width: 767.98px) {
+.icon .asset-grid {
+grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
+</style>
