@@ -1,5 +1,5 @@
 <template>
-  <USkeleton class="rounded-xl bg-[#FAFAFC] relative h-[13.125rem] w-full asset-skeleton-gradient" />
+  <USkeleton class="rounded-xl bg-[#FAFAFC] relative w-full asset-skeleton-gradient" />
 </template>
 
 <style scoped>

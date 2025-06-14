@@ -17,8 +17,7 @@ export function useSearchQuery() {
   const showRecent = ref<boolean>(false);
   const recentSearches = ref<string[]>([]);
 
-  /** Loads recent searches from localStorage. */
-  function loadRecent(): void {
+  function loadRecentSearches(): void {
     try {
       recentSearches.value = JSON.parse(
         localStorage.getItem('recentSearches') || '[]'
@@ -28,10 +27,6 @@ export function useSearchQuery() {
     }
   }
 
-  /**
-   * Handles the search form submission, updates recent searches, and navigates to the search results page.
-   * @param e - The submit event (optional)
-   */
   function onSearchSubmit(e?: Event): void {
     if (e && typeof (e as Event).preventDefault === 'function') (e as Event).preventDefault();
     const query = searchQuery.value.trim();
@@ -45,25 +40,22 @@ export function useSearchQuery() {
     recent = [query, ...recent.filter((q) => q !== query)];
     if (recent.length > 10) recent = recent.slice(0, 10);
     localStorage.setItem('recentSearches', JSON.stringify(recent));
-    loadRecent();
+    loadRecentSearches();
     showRecent.value = false;
     router.push(`/3d-illustrations/${encodeURIComponent(query)}`);
   }
 
-  /** Removes a recent search entry by index. */
   function removeRecent(idx: number): void {
     recentSearches.value.splice(idx, 1);
     localStorage.setItem('recentSearches', JSON.stringify(recentSearches.value));
   }
 
-  /** Handles blur event on the search input, delays hiding the recent search dropdown. */
   function onBlur(_e: FocusEvent): void {
     setTimeout(() => {
       showRecent.value = false;
     }, 120);
   }
 
-  /** Triggers a search using a recent search item. */
   function triggerRecentSearch(item: string): void {
     searchQuery.value = item;
     onSearchSubmit();
@@ -84,14 +76,14 @@ export function useSearchQuery() {
         localStorage.setItem('recentSearches', JSON.stringify(recent));
       }
     }
-    loadRecent();
+    loadRecentSearches();
   });
 
   return {
     searchQuery,
     showRecent,
     recentSearches,
-    loadRecent,
+    loadRecentSearches,
     onSearchSubmit,
     removeRecent,
     onBlur,
