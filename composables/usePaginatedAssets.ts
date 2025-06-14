@@ -26,6 +26,7 @@ export function usePaginatedAssets(props: { slug: string[]; query: string }) {
           product_type: "item",
           asset: assetType,
           page,
+          per_page: assetType === "icon" ? "200" : "80",
         },
         key: `assets-${assetType || "all"}-${props.query}-${page}`,
       });
