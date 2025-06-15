@@ -6,7 +6,7 @@
  * @param enabled - whether the observer should be active
  */
 export function useIntersectionObserver(
-  targetRef: any,
+  targetRef: Ref<HTMLElement | null>,
   callback: () => void,
   options: IntersectionObserverInit = {
     root: null,

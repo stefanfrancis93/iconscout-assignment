@@ -1,7 +1,4 @@
-import type {
-  Asset,
-  GetAssetsResponse,
-} from "~/composables/usePaginatedAssets";
+import type { Asset, GetAssetsResponse } from "~/shared/types/assets";
 import { lottieData } from "../mockData.lottie";
 
 const API_BASE = process.env.ICONSCOUT_API_BASE;
