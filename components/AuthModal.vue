@@ -82,6 +82,8 @@ type="submit"
 </template>
 
 <script setup lang="ts">
+import { useAuth } from "~/composables/states";
+
 const props = defineProps<{ show: boolean; mode?: 'login' | 'signup' }>()
 const emit = defineEmits(['close', 'update:mode'])
 const email = ref('')

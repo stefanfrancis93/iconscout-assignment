@@ -12,6 +12,7 @@
       <UAccordion
         type="multiple"
         :items="accordionItems"
+        :default-value="['0', '1', '2', '3']"
         class="ui-accordion-filters"
       >
         <template #item-asset="{ item }">
@@ -52,6 +53,8 @@
 </template>
 
 <script setup lang="ts">
+import type { AccordionItem } from '@nuxt/ui';
+
 defineProps<{ slug: string[]; query: string }>();
 
 const filters = reactive({
@@ -101,7 +104,7 @@ const accordionItems = [
       { label: "Featured", value: "featured" },
     ],
   },
-];
+]satisfies AccordionItem[];
 </script>
 
 <style scoped>

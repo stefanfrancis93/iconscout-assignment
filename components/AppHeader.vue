@@ -182,7 +182,7 @@
 <script setup lang="ts">
 import { useSearchQuery } from "~/composables/useSearchQuery";
 import { useAuthModal } from "~/composables/useAuthModal";
-import { useAuth } from "~/composables/useAuth";
+import { useAuth } from "~/composables/states";
 import type { DropdownMenuItem } from "@nuxt/ui";
 
 const {
