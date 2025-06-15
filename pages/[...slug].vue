@@ -8,7 +8,7 @@
     <div class="flex items-end">
       <div
         :class="[
-          'border-r border-b border-[#EBEDF5] transition-all duration-300 ease-in-out flex items-center',
+          'border-r border-b border-white-100 transition-all duration-300 ease-in-out flex items-center',
           open ? 'w-[260px]' : 'w-12'
         ]"
         style="overflow:hidden;"
@@ -16,7 +16,7 @@
         <UButton
           color="primary"
           variant="ghost"
-          class="flex justify-between gap-2 text-md text-gray-500 w-full h-12 cursor-pointer transition-all duration-300 ease-in-out"
+          class="flex justify-between gap-2 text-md text-gray-500 w-full h-12 cursor-pointer transition-all duration-300 ease-in-out hover:bg-transparent"
           @click="toggleSidebar"
         >
           <span class="flex items-center gap-2 w-full">

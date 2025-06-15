@@ -1,14 +1,17 @@
 <template>
   <div
-    class="w-[260px] p-4 bg-white border-r border-b border-[#EBEDF5] min-h-[80vh]"
+    class="w-[260px] bg-white border-r border-b border-white-100 min-h-[80vh] sidebar-filters"
   >
-    <UForm class="flex flex-col gap-6" :state="{}">
-      <UFormField>
-        <div class="flex items-center justify-between mb-2">
-          <span class="font-medium text-base">Iconscout Exclusive</span>
-          <USwitch v-model="filters.exclusive" color="primary" />
-        </div>
-      </UFormField>
+    <UForm class="flex flex-col" :state="{}">
+      <div
+        class="flex items-center justify-between py-5 px-6 border-b border-white-100"
+      >
+        <USwitch
+          v-model="filters.exclusive"
+          color="primary"
+          label="Iconscout Exclusive"
+        />
+      </div>
       <UAccordion
         type="multiple"
         :items="accordionItems"
@@ -16,36 +19,16 @@
         class="ui-accordion-filters"
       >
         <template #item-asset="{ item }">
-          <UFormField class="mb-2">
-            <URadioGroup
-              v-model="filters.asset"
-              :items="item.options"
-            />
-          </UFormField>
+          <URadioGroup v-model="filters.asset" :items="item.options" />
         </template>
         <template #item-price="{ item }">
-          <UFormField class="mb-2">
-            <URadioGroup
-              v-model="filters.price"
-              :items="item.options"
-            />
-          </UFormField>
+          <URadioGroup v-model="filters.price" :items="item.options" />
         </template>
         <template #item-view="{ item }">
-          <UFormField class="mb-2">
-            <URadioGroup
-              v-model="filters.view"
-              :items="item.options"
-            />
-          </UFormField>
+          <URadioGroup v-model="filters.view" :items="item.options" />
         </template>
         <template #item-sort="{ item }">
-          <UFormField class="mb-2">
-            <URadioGroup
-              v-model="filters.sort"
-              :items="item.options"
-            />
-          </UFormField>
+          <URadioGroup v-model="filters.sort" :items="item.options" />
         </template>
       </UAccordion>
     </UForm>
@@ -53,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import type { AccordionItem } from '@nuxt/ui';
+import type { AccordionItem } from "@nuxt/ui";
 
 defineProps<{ slug: string[]; query: string }>();
 
@@ -65,6 +48,7 @@ const filters = reactive({
   sort: "featured",
   category: "",
 });
+console.log("Filters:", filters);
 
 const accordionItems = [
   {
@@ -104,16 +88,12 @@ const accordionItems = [
       { label: "Featured", value: "featured" },
     ],
   },
-]satisfies AccordionItem[];
+] satisfies AccordionItem[];
 </script>
 
 <style scoped>
-.ui-accordion-filters .ui-accordion-item {
-  border: none;
-}
-.ui-accordion-filters .ui-accordion-header {
-  font-weight: 600;
-  font-size: 1rem;
-  color: #2e334c;
+.sidebar-filters:deep(.ui-accordion-filters > div > div:first-child > button) {
+  padding: 16px 24px 15px;
+  cursor: pointer;
 }
 </style>

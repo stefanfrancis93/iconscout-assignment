@@ -4,6 +4,7 @@
 @theme static {
   --color-brand: #0092E4;
   --color-brand-darker: #0073c2;
+  --color-brand-100: #3D92DE;
 
   --color-skeleton: #D9D9D9;
 
@@ -31,7 +32,7 @@
 
   --color-teal-500: #24A8AF;
   
-  --ui-primary: var(---color-brand-400);
+  --ui-primary: var(--color-brand);
   --ui-text: var(--color-gray-400);
   --ui-container: none;
 }
