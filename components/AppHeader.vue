@@ -139,21 +139,22 @@
         variant="outline"
         class="px-5 py-2.5 rounded-full text-black"
         aria-label="Login"
-        >Login</UButton
-      >
+        @click="openAuthModal('login')"
+      >Login</UButton>
       <UButton
         size="xl"
         variant="solid"
         class="px-5 py-2.5 rounded-full bg-brand text-white"
         aria-label="Signup"
-        >Signup</UButton
-      >
+        @click="openAuthModal('signup')"
+      >Signup</UButton>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
 import { useSearchQuery } from "~/composables/useSearchQuery";
+import { useAuthModal } from '~/composables/useAuthModal';
 
 const {
   searchQuery,
@@ -164,4 +165,6 @@ const {
   onBlur,
   triggerRecentSearch,
 } = useSearchQuery();
+
+const { openAuthModal } = useAuthModal();
 </script>

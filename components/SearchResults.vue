@@ -14,10 +14,10 @@
         <div v-if="!isLoggedIn" class="guest-sign-up">
           <div class="relative z-10 px-8 py-8 flex flex-col items-center w-full max-w-md">
             <h3 class="text-2xl font-bold mb-5 text-black">View all Limit 3D Illustrations</h3>
-            <UButton color="primary" variant="solid" class="h-[54px] w-full max-w-64 bg-brand justify-center text-lg font-semibold rounded-xl hover:bg-brand hover:brightness-110 cursor-pointer transition-all duration-200 ease-in-out active:brightness-95">
+            <UButton color="primary" variant="solid" class="h-[54px] w-full max-w-64 bg-brand justify-center text-lg font-semibold rounded-xl hover:bg-brand hover:brightness-110 cursor-pointer transition-all duration-200 ease-in-out active:brightness-95" @click="openAuthModal('signup')">
               Get Started - It's Free
             </UButton>
-            <p class="text-lg text-gray-700 mt-1">Already have an account? <UButton color="primary" variant="ghost" class="text-lg font-semibold text-brand cursor-pointer">Log In</UButton>
+            <p class="text-lg text-gray-700 mt-1">Already have an account? <UButton color="primary" variant="ghost" class="text-lg font-semibold text-brand cursor-pointer" @click="openAuthModal('login')">Log In</UButton>
             </p>
           </div>
         </div>
@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { useIntersectionObserver } from "~/composables/useIntersectionObserver";
 import { usePaginatedAssets } from "~/composables/usePaginatedAssets";
+import { useAuthModal } from '~/composables/useAuthModal';
 
 const props = defineProps<{
   slug: string[];
@@ -44,6 +45,7 @@ const intersectionRef = ref<HTMLElement | null>(null);
 const { assetType, assets, status, loadingMoreStatus, error, pagination, currentPage } =
   usePaginatedAssets(props);
 const { isLoggedIn } = useAuth();
+const { openAuthModal } = useAuthModal();
 
 useIntersectionObserver(
   intersectionRef,

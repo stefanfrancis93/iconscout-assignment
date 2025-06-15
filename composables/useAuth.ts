@@ -2,21 +2,36 @@
  * @description This composable provides a reactive way to check if a user is logged in
  * by checking for an authentication token in local storage. It listens for changes in
  * local storage to update the login state reactively.
- * @returns {Object} An object containing a reactive property `isLoggedIn`
- * that indicates whether the user is logged in.
+ * @returns {Object} An object containing a reactive property `isLoggedIn` indicating
+ * whether the user is logged in, and a method `setToken` to set the authentication token.
  */
-export function useAuth() {
-  const isLoggedIn = ref(false);
 
-  function checkAuth() {
+const isLoggedIn = ref(false);
+
+function checkAuth() {
+  try {
     const token = localStorage.getItem("auth_token");
     isLoggedIn.value = !!token;
+  } catch (_e) {
+    console.error("Failed to check auth token:", _e);
+    isLoggedIn.value = false;
   }
+}
 
-  onMounted(() => {
-    checkAuth();
-    window.addEventListener("storage", checkAuth);
-  });
+function setToken(token) {
+  try {
+    localStorage.setItem("auth_token", token);
+    isLoggedIn.value = !!token;
+  } catch (e) {
+    console.error("Failed to set auth token:", e);
+  }
+}
 
-  return { isLoggedIn };
+if (typeof window !== "undefined") {
+  checkAuth();
+  window.addEventListener("storage", checkAuth);
+}
+
+export function useAuth() {
+  return { isLoggedIn, setToken };
 }
