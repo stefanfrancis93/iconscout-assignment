@@ -161,7 +161,7 @@
         <UButton
           size="xl"
           variant="outline"
-          class="px-5 py-2.5 rounded-full text-black"
+          class="px-5 py-2.5 rounded-full text-black cursor-pointer"
           aria-label="Login"
           @click="openAuthModal('login')"
           >Login</UButton
@@ -169,7 +169,7 @@
         <UButton
           size="xl"
           variant="solid"
-          class="px-5 py-2.5 rounded-full bg-brand text-white"
+          class="px-5 py-2.5 rounded-full bg-brand text-white cursor-pointer"
           aria-label="Signup"
           @click="openAuthModal('signup')"
           >Signup</UButton

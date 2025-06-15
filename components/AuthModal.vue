@@ -4,7 +4,7 @@
       <div v-if="show" class="fixed inset-0 z-[1040] flex items-center justify-center">
         <div class="fixed inset-0 bg-black/70" @click="close" />
         <div class="relative z-10 bg-white rounded-2xl md:rounded-4xl shadow-xl w-full max-w-[870px] mx-auto my-8">
-          <UButton class="absolute top-4 right-4 p-2 cursor-pointer" @click="close">
+          <UButton class="absolute top-4 right-4 p-2 cursor-pointer bg-transparent hover:bg-white-100 rounded-full" @click="close">
             <img src="https://cdna.iconscout.com/img/close.86b735b.svg" height="24" alt="Close">
           </UButton>
           <div class="flex flex-col md:flex-row items-stretch p-4">
