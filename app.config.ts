@@ -29,7 +29,7 @@ export default defineAppConfig({
       variants: {
         color: {
           primary: {
-            base: "data-[state=checked]:bg-teal-500",
+            base: "data-[state=checked]:bg-teal-500 cursor-pointer",
           },
         },
       },
