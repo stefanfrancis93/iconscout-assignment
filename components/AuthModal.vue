@@ -95,7 +95,7 @@ const formState = reactive({
   loading: false
 })
 const mode = ref(props.mode || 'login')
-const { setToken } = useAuth()
+const { setLoginStateWithToken } = useAuth()
 
 watch(() => props.mode, (val) => {
   if (val) mode.value = val
@@ -120,7 +120,7 @@ async function submit() {
     })
     const { access_token } = await res.json() ?? {}
     if (access_token) {
-      setToken(access_token)
+      setLoginStateWithToken(access_token)
       close()
     } else {
       if (mode.value === 'signup') {
