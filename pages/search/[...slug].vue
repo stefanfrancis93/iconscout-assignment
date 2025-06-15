@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="flex flex-col pt-6 pl-10">
+    <div class="flex flex-col pt-6 pl-10 bg-white-600">
       <h1 class="text-black text-[35px] font-bold">
         237 Limit 3D Illustrations
       </h1>
     </div>
-    <div class="flex items-end">
+    <div class="flex items-end sticky top-[88px] bg-white-600 z-10">
       <div
         :class="[
           'border-r border-b border-white-100 transition-all duration-300 ease-in-out flex items-center',

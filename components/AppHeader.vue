@@ -1,6 +1,6 @@
 <template>
   <header
-    class="flex items-center justify-between px-6 py-3 bg-white shadow-[0px_6px_16px_0px_rgba(0,_0,_0,_0.08)]"
+    class="flex items-center justify-between px-6 py-3 bg-white shadow-[0px_6px_16px_0px_rgba(0,_0,_0,_0.08)] sticky top-0 z-10"
     role="banner"
   >
     <a

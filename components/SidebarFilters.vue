@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-[260px] bg-white border-r border-b border-white-100 min-h-[80vh] sidebar-filters"
+    class="w-[260px] bg-white border-r border-b border-white-100 min-h-[80vh] sticky top-[137px] sidebar-filters"
   >
     <UForm class="flex flex-col" :state="{}">
       <div
