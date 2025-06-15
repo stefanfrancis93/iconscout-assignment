@@ -27,11 +27,20 @@ function setToken(token) {
   }
 }
 
+function logout() {
+  try {
+    localStorage.removeItem("auth_token");
+    isLoggedIn.value = false;
+  } catch (e) {
+    console.error("Failed to remove auth token:", e);
+  }
+}
+
 if (typeof window !== "undefined") {
   checkAuth();
   window.addEventListener("storage", checkAuth);
 }
 
 export function useAuth() {
-  return { isLoggedIn, setToken };
+  return { isLoggedIn, setToken, logout };
 }
