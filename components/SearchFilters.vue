@@ -5,78 +5,54 @@
   >
     <li role="presentation">
       <NuxtLink
-        :to="`/all-assets/${query}`"
         :class="tabClass('/all-assets')"
         role="tab"
         rel="follow"
+        @click="onClickFilter('all')"
       >
         All Assets
       </NuxtLink>
     </li>
     <li role="presentation">
       <NuxtLink
-        :to="`/3d-illustrations/${query}`"
         :class="tabClass('/3d-illustrations')"
         role="tab"
         rel="follow"
+        @click="onClickFilter('3d')"
       >
         3D Illustrations
       </NuxtLink>
     </li>
     <li role="presentation">
       <NuxtLink
-        :to="`/lottie-animations/${query}`"
         :class="tabClass('/lottie-animations')"
         role="tab"
         rel="follow"
+        @click="onClickFilter('lottie')"
       >
         Lottie Animations
       </NuxtLink>
     </li>
-    <!-- <li role="presentation">
-          <NuxtLink
-            :to="`/kit-illustrations/${query}`"
-            :class="tabClass('/kit-illustrations')"
-            role="tab"
-            rel="nofollow"
-          >
-            Illustration Kits
-          </NuxtLink>
-        </li> -->
     <li role="presentation">
       <NuxtLink
-        :to="`/illustrations/${query}`"
         :class="tabClass('/illustrations')"
         role="tab"
         rel="follow"
+        @click="onClickFilter('illustration')"
       >
         Illustrations
       </NuxtLink>
     </li>
     <li role="presentation">
       <NuxtLink
-        :to="`/icons/${query}`"
         :class="tabClass('/icons')"
         role="tab"
         rel="follow"
+        @click="onClickFilter('icon')"
       >
         Icons
       </NuxtLink>
     </li>
-    <!-- <li role="presentation">
-          <NuxtLink
-            :to="`/ai-images/${query}`"
-            :class="tabClass('/ai-images')"
-            role="tab"
-            rel="nofollow"
-          >
-            AI Images
-            <span
-              class="ml-1 px-2 py-0.5 rounded-full bg-teal-500 text-white text-[10px] font-semibold align-middle"
-              >NEW</span
-            >
-          </NuxtLink>
-        </li> -->
   </ul>
 </template>
 
@@ -88,8 +64,13 @@ const props = defineProps<{
   query: string;
   routePath: string;
 }>();
+const { setAssetFilter } = useFilters()
 
 function tabClass(base: string): string {
   return getTabClass(base, props.slug, props.routePath);
+}
+
+function onClickFilter(asset: string) {
+  setAssetFilter(asset)
 }
 </script>

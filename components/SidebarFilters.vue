@@ -37,18 +37,11 @@
 
 <script setup lang="ts">
 import type { AccordionItem } from "@nuxt/ui";
+import { useFilters } from '~/composables/states';
 
 defineProps<{ slug: string[]; query: string }>();
 
-const filters = reactive({
-  exclusive: false,
-  asset: "3d",
-  price: "premium",
-  view: "individual",
-  sort: "featured",
-  category: "",
-});
-console.log("Filters:", filters);
+const { filters } = useFilters();
 
 const accordionItems = [
   {
@@ -85,7 +78,7 @@ const accordionItems = [
     options: [
       { label: "Popular", value: "popular" },
       { label: "Latest", value: "latest" },
-      { label: "Featured", value: "featured" },
+      { label: "Relevant", value: "relevant" },
     ],
   },
 ] satisfies AccordionItem[];
