@@ -5,7 +5,7 @@
       <slot />
     </div>
     <AppFooter />
-    <AuthModal :show="showAuthModal" :mode="authMode" @close="closeAuthModal" @update:mode="onUpdateMode" />
+    <AuthModal :show="showAuthModal" :mode="authMode" @close="closeAuthModal" />
   </UContainer>
 </template>
 
@@ -14,7 +14,4 @@ import AuthModal from '~/components/AuthModal.vue'
 import { useAuthModal } from '~/composables/useAuthModal'
 
 const { showAuthModal, authMode, closeAuthModal } = useAuthModal()
-function onUpdateMode(mode: 'login' | 'signup') {
-  // This is just to trigger reactivity if needed
-}
 </script>

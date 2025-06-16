@@ -20,7 +20,7 @@
           <AssetCard :item="item" class="asset-grid__item" />
         </div>
         <div
-          v-if="!isLoggedIn && loadingStatus === 'pending'"
+          v-if="!isLoggedIn && loadingStatus === 'success'"
           class="guest-sign-up"
         >
           <div

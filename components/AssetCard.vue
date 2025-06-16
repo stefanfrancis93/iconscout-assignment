@@ -1,6 +1,7 @@
 <template>
   <article
     v-if="item && item.urls"
+    ref="containerRef"
     :title="item.name"
     class="block rounded-lg bg-[#FAFAFC] relative w-full asset-card"
   >
@@ -9,12 +10,14 @@
       tabindex="-1"
       class="flex items-center justify-center h-full w-full py-2 px-3 group"
     >
-      <DotLottieVue
-        v-if="item.urls.lottie || item.urls.original"
-        :src="item.urls.lottie || item.urls.original"
-        :autoplay="true"
-        :loop="true"
-      />
+      <template v-if="item.urls.lottie || item.urls.original">
+        <DotLottieVue
+          v-if="showLottie"
+          :src="item.urls.lottie || item.urls.original"
+          :autoplay="true"
+          :loop="true"
+        />
+      </template>
       <video
         v-else-if="item.urls.thumb && item.urls.thumb.endsWith('.mp4')"
         :src="item.urls.thumb"
@@ -73,6 +76,9 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const showLottie = ref(false);
+const containerRef = ref<HTMLElement | null>(null);
+let observer: IntersectionObserver;
 
 const fallbackImage = computed(() => {
   return (
@@ -88,6 +94,25 @@ const webpSrcSet = computed(() => {
   return fallbackImage.value
     ? `${fallbackImage.value}?f=webp 1x, ${fallbackImage.value}?f=webp 2x`
     : "";
+});
+
+onMounted(() => {
+  if (!containerRef.value) return;
+
+  observer = new IntersectionObserver(
+    ([entry]) => {
+      showLottie.value = entry.isIntersecting;
+    },
+    { threshold: 0.25 }
+  );
+
+  observer.observe(containerRef.value);
+});
+
+onBeforeUnmount(() => {
+  if (observer && containerRef.value) {
+    observer.unobserve(containerRef.value);
+  }
 });
 </script>
 

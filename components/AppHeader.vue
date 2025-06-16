@@ -182,10 +182,6 @@ const dropdownItems = ref<DropdownMenuItem[][]>([
 ]);
 
 function onSearchSubmit() {
-  console.log({
-    assetDropdownValue: assetDropdownValue.value,
-    searchQuery: searchQuery.value,
-  });
   const query = searchQuery.value.trim();
   if (!query) return;
   router.push(
