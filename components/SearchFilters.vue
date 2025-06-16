@@ -5,7 +5,7 @@
   >
     <li role="presentation">
       <NuxtLink
-        :class="tabClass('/all-assets')"
+        :class="getTabClass('/all-assets', slug, routePath)"
         role="tab"
         rel="follow"
         @click="onClickFilter('all')"
@@ -15,7 +15,7 @@
     </li>
     <li role="presentation">
       <NuxtLink
-        :class="tabClass('/3d-illustrations')"
+        :class="getTabClass('/3d-illustrations', slug, routePath)"
         role="tab"
         rel="follow"
         @click="onClickFilter('3d')"
@@ -25,7 +25,7 @@
     </li>
     <li role="presentation">
       <NuxtLink
-        :class="tabClass('/lottie-animations')"
+        :class="getTabClass('/lottie-animations', slug, routePath)"
         role="tab"
         rel="follow"
         @click="onClickFilter('lottie')"
@@ -35,7 +35,7 @@
     </li>
     <li role="presentation">
       <NuxtLink
-        :class="tabClass('/illustrations')"
+        :class="getTabClass('/illustrations', slug, routePath)"
         role="tab"
         rel="follow"
         @click="onClickFilter('illustration')"
@@ -45,7 +45,7 @@
     </li>
     <li role="presentation">
       <NuxtLink
-        :class="tabClass('/icons')"
+        :class="getTabClass('/icons', slug, routePath)"
         role="tab"
         rel="follow"
         @click="onClickFilter('icon')"
@@ -57,16 +57,30 @@
 </template>
 
 <script setup lang="ts">
-import { getTabClass } from "~/utils/getTabClass";
-
-const props = defineProps<{
+defineProps<{
   slug: string[];
   routePath: string;
 }>();
 const { filters } = useFilters()
 
-function tabClass(base: string): string {
-  return getTabClass(base, props.slug, props.routePath);
+function getTabClass(
+  base: string,
+  slug: string[] | string | undefined,
+  routePath: string
+): string {
+  const re = new RegExp(`^${base}(/|$)`);
+  const path =
+    Array.isArray(slug) && slug.length > 0 ? `/${slug[0]}` : routePath;
+  const query: string = Array.isArray(slug) && slug.length > 1 ? slug[1] : "";
+  const isActive = re.test(path);
+  const baseClass =
+    "text-sm px-0 py-0 bg-transparent border-none shadow-none transition-colors duration-150 font-semibold text-blue-500 cursor-pointer";
+  const activeClass =
+    "text-black font-bold relative after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-[-15px] after:border-b-2 after:border-black";
+
+  const defaultFilterSelected = isActive && base === "/all-assets" && query === "";
+  
+  return (isActive || defaultFilterSelected) ? `${baseClass} ${activeClass}` : baseClass;
 }
 
 function onClickFilter(asset: string) {

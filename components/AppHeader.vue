@@ -138,11 +138,11 @@ const { openAuthModal } = useAuthModal();
 const { isLoggedIn, logout } = useAuth();
 const route = useRoute();
 const router = useRouter();
-const assetType =
+const assetDropdownValue = computed(() =>
   Array.isArray(route.params.slug) && route.params.slug.length > 0
     ? decodeURIComponent(route.params.slug[0])
-    : "all-assets";
-const assetDropdownValue = ref(assetType);
+    : "all-assets"
+);
 const assets = [
   { label: "All", value: "all-assets" },
   { label: "3D", value: "3d-illustrations" },
