@@ -33,7 +33,6 @@
 
 <script setup lang="ts">
 import { useIntersectionObserver } from "~/composables/useIntersectionObserver";
-import { usePaginatedAssets } from "~/composables/usePaginatedAssets";
 import { useAuthModal } from '~/composables/useAuthModal';
 import { useAuth } from "~/composables/states";
 

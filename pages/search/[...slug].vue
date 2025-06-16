@@ -2,7 +2,7 @@
   <div>
     <div class="flex flex-col pt-6 pl-10 bg-white-600">
       <h1 class="text-black text-[35px] font-bold">
-        237 Limit 3D Illustrations
+        {{ getSearchResultsTitle(pagination.total, route.params.slug, query) }}
       </h1>
     </div>
     <div class="flex items-end sticky top-[88px] bg-white-600 z-10">
@@ -61,6 +61,7 @@ const slug: string[] = (route.params.slug as string[]) || [];
 const query: string = Array.isArray(slug) && slug.length > 1 ? slug[1] : "";
 
 const { open, toggleSidebar } = useSidebar();
+const { pagination } = usePagination()
 </script>
 
 <style scoped>
