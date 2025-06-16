@@ -1,11 +1,12 @@
 <template>
   <div>
-    <div class="flex flex-col pt-6 pl-10 bg-white-600">
+    <div class="flex flex-col pt-6 pl-10 bg-white-600 gap-1 pb-6">
       <h1 class="text-black text-[35px] font-bold">
         {{ getSearchResultsTitle(pagination?.total, route.params.slug, searchQuery, loadingStatus) }}
       </h1>
+      <p class="text-sm text-[#5A607D]">{{ `248 3Ds exclusively selected by our designer community.` }}</p>
     </div>
-    <div class="flex items-end sticky top-[88px] bg-white-600 z-10">
+    <div class="flex items-end sticky top-[70px] bg-white-600 z-10">
       <div
         :class="[
           'border-r border-b border-white-100 transition-all duration-300 ease-in-out flex items-center',

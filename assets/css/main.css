@@ -11,14 +11,12 @@
   --color-white-100: #EBEDF5;
   --color-white-200: #D8DBEB;
   --color-white-400: rgba(235, 237, 245, 1);
-  --color-white-500: #D8DBEB;
   --color-white-600: #FAFAFC;
 
   --color-blue-300: #436ecb;
   --color-blue-400: #5383ec;
   --color-blue-500: #2F72BC;
   --color-blue-600: #0058E3;
-  --color-blue-700: #0073c2;
 
   --color-gray-50: #B4BAD6;
   --color-gray-75: #8F95B3;
@@ -29,6 +27,7 @@
   --color-gray-400: #424866;
   --color-gray-450: #444962;
   --color-gray-500: #2E334C;
+  --color-gray-550: #2E334D;
   --color-gray-600: #1C2033;
 
   --color-teal-500: #24A8AF;

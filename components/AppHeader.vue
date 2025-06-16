@@ -1,117 +1,86 @@
 <template>
   <header
-    class="flex items-center justify-between px-6 py-3 bg-white shadow-[0px_6px_16px_0px_rgba(0,_0,_0,_0.08)] sticky top-0 z-10"
+    class="flex items-center justify-between px-6 py-3 bg-white shadow-[0px_6px_16px_0px_rgba(0,_0,_0,_0.08)] sticky top-0 z-10 h-[70px]"
     role="banner"
   >
-    <a
-      href="/"
-      class="flex items-center gap-2 w-[170px]"
-      aria-label="IconScout Home"
-    >
-      <img src="/logo.svg" alt="IconScout Logo" class="w-[170px]" />
-    </a>
-
-    <UForm :state="{ searchQuery }" @submit.prevent="onSearchSubmit">
-      <UButtonGroup
-        class="flex bg-white-100 items-center flex-1 max-w-[360px] mx-6 rounded-lg px-2.5 py-2 gap-[9px]"
+    <div class="flex gap-[29px] w-full">
+      <a
+        href="/"
+        class="flex items-center gap-2 w-[170px]"
+        aria-label="IconScout Home"
       >
-        <USelect
-          v-model="assetDropdownValue"
-          :items="assets"
-          variant="ghost"
-          class="cursor-pointer"
-          :ui="{ item: 'cursor-pointer' }"
-        />
-        <USeparator
-          orientation="vertical"
-          class="h-7"
-          :ui="{ border: 'border-gray-50' }"
-        />
-        <UInput
-          v-model="searchQuery"
-          class="flex-1"
-          label="Search assets"
-          leading-icon="i-lucide-search"
-          placeholder="Search from 8 Million+ assets"
-          size="md"
-          name="searchQuery"
-          variant="ghost"
-          :ui="{
-            trailing: 'p-0',
-            base: 'bg-transparent hover:bg-transparent hover:cursor-text focus:bg-transparent placeholder:text-gray-500',
-          }"
+        <img src="/logo.svg" alt="IconScout Logo" class="w-[170px]" />
+      </a>
+      <UForm
+        :state="{ searchQuery }"
+        class="w-full max-w-[360px]"
+        @submit.prevent="onSearchSubmit"
+      >
+        <UButtonGroup
+          size="sm"
+          class="flex bg-white-100 items-center flex-1 w-full rounded-lg px-2.5 py-2 gap-[9px] h-[46px]"
         >
-          <template #trailing>
-            <UButton
-              type="button"
-              class="ml-2 flex justify-center w-12 h-12 rounded-lg shadow-none focus:outline-none m-0 p-0 size-7.5 bg-transparent hover:bg-transparent"
-              aria-label="Open asset search options"
-            >
-              <img
-                src="public/reverse-image-search.svg"
-                alt="Reverse Image Search"
-                class="size-7.5"
-              />
-            </UButton>
-          </template>
-        </UInput>
-      </UButtonGroup>
-    </UForm>
-
-    <nav aria-label="Main navigation" class="hidden xl:flex">
-      <ul class="flex items-center gap-4">
-        <li>
-          <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
-            Explore
-            <span class="size-4"
-              ><img class="size-4" src="/angle-down.svg" alt="Explore"
-            /></span>
-          </UButton>
-        </li>
-        <li>
-          <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
-            Tools
-            <span class="size-4"
-              ><img class="size-4" src="/angle-down.svg" alt="Tools"
-            /></span>
-          </UButton>
-        </li>
-        <li>
-          <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
-            All Features
-          </UButton>
-        </li>
-        <li>
-          <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
-            <span class="size-4"
-              ><img class="size-4" src="/gift.svg" alt="Free Asset"
-            /></span>
-            Free Asset
-          </UButton>
-        </li>
-        <li>
-          <UButton color="neutral" variant="ghost" class="text-[0] gap-0">
-            Learn
-            <span class="size-4"
-              ><img class="size-4" src="/angle-down.svg" alt="Learn"
-            /></span>
-          </UButton>
-        </li>
-      </ul>
-    </nav>
+          <USelect
+            v-model="assetDropdownValue"
+            :items="assets"
+            variant="ghost"
+            class="cursor-pointer"
+            :ui="{ item: 'cursor-pointer' }"
+          />
+          <USeparator
+            orientation="vertical"
+            class="h-7"
+            :ui="{ border: 'border-gray-50' }"
+          />
+          <UInput
+            v-model="searchQuery"
+            class="flex-1"
+            label="Search assets"
+            leading-icon="i-lucide-search"
+            placeholder="Search from 8 Million+ assets"
+            size="md"
+            name="searchQuery"
+            variant="ghost"
+            :ui="{
+              trailing: 'p-0',
+              base: 'bg-transparent hover:bg-transparent hover:cursor-text focus:bg-transparent placeholder:text-gray-500',
+            }"
+          >
+            <template #trailing>
+              <UButton
+                type="button"
+                class="ml-2 flex justify-center w-12 h-12 rounded-lg shadow-none focus:outline-none m-0 p-0 size-7.5 bg-transparent hover:bg-transparent"
+                aria-label="Open asset search options"
+              >
+                <img
+                  src="public/reverse-image-search.svg"
+                  alt="Reverse Image Search"
+                  class="size-7.5"
+                />
+              </UButton>
+            </template>
+          </UInput>
+        </UButtonGroup>
+      </UForm>
+      <UNavigationMenu
+        color="neutral"
+        variant="link"
+        :items="items"
+        :ui="{
+          root: 'hidden xl:flex',
+          item: 'p-0',
+          link: 'text-gray-550 hover:text-brand-darker text-base font-semibold gap-0 cursor-pointer',
+          linkTrailingIcon: 'size-4',
+        }"
+      />
+    </div>
 
     <template v-if="isLoggedIn">
-      <UDropdownMenu
-        :items="dropdownItems"
-        :ui="{
-          content: 'w-48',
-        }"
-        :modal="false"
-      >
+      <UDropdownMenu :items="dropdownItems" :modal="false">
         <UButton
           color="neutral"
           variant="outline"
-          class="bg-white-100 rounded-full p-1 justify-center overflow-hidden cursor-pointer"
+          class="bg-white-100 rounded-full p-1 justify-center overflow-hidden cursor-pointer size-[46px] min-w-auto min-h-auto"
         >
           <div
             class="flex size-10 rounded-full p-0 justify-center items-center overflow-hidden"
@@ -150,7 +119,7 @@
 <script setup lang="ts">
 import { useAuthModal } from "~/composables/useAuthModal";
 import { useAuth } from "~/composables/states";
-import type { DropdownMenuItem } from "@nuxt/ui";
+import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui";
 
 const { openAuthModal } = useAuthModal();
 const { isLoggedIn, logout } = useAuth();
@@ -175,6 +144,31 @@ const initialSearch =
     : "");
 
 const searchQuery = ref<string>(initialSearch);
+
+const items = ref<NavigationMenuItem[][]>([
+  [
+    {
+      label: "Explore",
+      trailingIcon: "i-lucide-chevron-down",
+    },
+    {
+      label: "Tools",
+      trailingIcon: "i-lucide-chevron-down",
+    },
+    {
+      label: "All Features",
+      trailingIcon: "i-lucide-chevron-down",
+    },
+    {
+      label: "Free Asset",
+      trailingIcon: "i-lucide-chevron-down",
+    },
+    {
+      label: "Learn",
+      trailingIcon: "i-lucide-chevron-down",
+    },
+  ],
+]);
 
 const dropdownItems = ref<DropdownMenuItem[][]>([
   [
