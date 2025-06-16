@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     per_page = "50",
     page = "1",
     sort = "relevant",
-    price = "free"
+    price = "free",
   } = query;
 
   const url = new URL(`${API_BASE}/v3/search`);

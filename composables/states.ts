@@ -40,7 +40,7 @@ export const useAuth = () => {
 export const useFilters = () => {
   const route = useRoute();
   const assetFilter =
-    route.params.slug.length > 0
+    route.params.slug?.length > 0
       ? Object.keys(ASSET_FILTER_ENDPOINT_MAP).find(
           (k) => ASSET_FILTER_ENDPOINT_MAP[k] === route.params.slug?.[0]
         ) ?? "all"
@@ -60,48 +60,26 @@ export const useFilters = () => {
   watch(
     filters,
     (newFilters) => {
+      if (route.path === "/") return;
       const { asset, price, view, sort } = newFilters ?? {};
-      const queryParams = new URLSearchParams();
+      const { lottieFormat } = route.query;
 
-      const oldAsset =
-        Object.keys(ASSET_FILTER_ENDPOINT_MAP).find(
-          (k) => ASSET_FILTER_ENDPOINT_MAP[k] === route.params.slug?.[0]
-        ) ?? "all";
-      const oldPrice = queryParams.get("price");
-      const oldView = queryParams.get("view");
-      const oldSort = queryParams.get("sort");
       const currentRoute = useRoute();
       const router = useRouter();
 
-      const anyFilterChanged =
-        oldAsset !== asset ||
-        oldPrice !== price ||
-        oldView !== view ||
-        oldSort !== sort;
-      if (!anyFilterChanged) {
-        // No filters changed, no need to update the URL
-        return;
-      }
-
-      if (oldPrice !== price) {
-        queryParams.set("price", price as string);
-      }
-      if (oldView !== view) {
-        queryParams.set("view", view as string);
-      }
-      if (oldSort !== sort) {
-        queryParams.set("sort", sort as string);
-      }
       const routeSplit = currentRoute.path.split("/");
-      let path = currentRoute.path;
-      if (oldAsset !== asset && ASSET_FILTER_ENDPOINT_MAP[asset]) {
-        path = routeSplit
-          .map((r, i) => (i === 2 ? ASSET_FILTER_ENDPOINT_MAP[asset] : r))
-          .join("/");
-      }
+      const path = routeSplit
+        .map((r, i) => (i === 2 ? ASSET_FILTER_ENDPOINT_MAP[asset] : r))
+        .join("/");
+
       router.push({
         path,
-        query: Object.fromEntries(queryParams.entries()),
+        query: {
+          price,
+          view,
+          sort,
+          lottieFormat,
+        },
       });
     },
     {

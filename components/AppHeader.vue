@@ -4,8 +4,8 @@
     role="banner"
   >
     <div class="flex gap-4 xl:gap-[29px] w-full">
-      <a
-        href="/"
+      <NuxtLink
+        to="/"
         class="flex items-center gap-2 w-[120px] md:w-[170px]"
         aria-label="IconScout Home"
       >
@@ -14,7 +14,7 @@
           alt="IconScout Logo"
           class="w-[120px] md:min-w-[170px]"
         />
-      </a>
+      </NuxtLink>
       <UForm
         :state="{ searchQuery }"
         class="w-full max-w-none md:max-w-[360px]"
@@ -141,7 +141,7 @@ const router = useRouter();
 const assetType =
   Array.isArray(route.params.slug) && route.params.slug.length > 0
     ? decodeURIComponent(route.params.slug[0])
-    : "";
+    : "all-assets";
 const assetDropdownValue = ref(assetType);
 const assets = [
   { label: "All", value: "all-assets" },

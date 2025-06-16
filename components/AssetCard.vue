@@ -11,7 +11,7 @@
     >
       <DotLottieVue
         v-if="item.urls.lottie || item.urls.original"
-        :src="item.urls.lottie || item.urls.original"
+        :src="getLottieSrc"
         :autoplay="true"
         :loop="true"
       />
@@ -72,6 +72,8 @@ interface Props {
   item: Asset;
 }
 
+const route = useRoute();
+const { lottieFormat } = route.query;
 const props = defineProps<Props>();
 const showAsset = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
@@ -92,6 +94,12 @@ const webpSrcSet = computed(() => {
     ? `${fallbackImage.value}?f=webp 1x, ${fallbackImage.value}?f=webp 2x`
     : "";
 });
+
+const getLottieSrc = computed(() =>
+  lottieFormat
+    ? props.item.urls[typeof lottieFormat === "string" ? lottieFormat : lottieFormat[0]]
+    : props.item.urls.lottie || props.item.urls.original
+);
 
 onMounted(() => {
   if (!containerRef.value) return;
