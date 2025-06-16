@@ -2,7 +2,7 @@
   <div>
     <div class="flex flex-col pt-6 pl-10 bg-white-600">
       <h1 class="text-black text-[35px] font-bold">
-        {{ getSearchResultsTitle(pagination.total, route.params.slug, query) }}
+        {{ getSearchResultsTitle(pagination?.total, route.params.slug, query, loadingStatus) }}
       </h1>
     </div>
     <div class="flex items-end sticky top-[88px] bg-white-600 z-10">
@@ -62,6 +62,7 @@ const query: string = Array.isArray(slug) && slug.length > 1 ? slug[1] : "";
 
 const { open, toggleSidebar } = useSidebar();
 const { pagination } = usePagination()
+const { loadingStatus } = useLoadingStatus()
 </script>
 
 <style scoped>

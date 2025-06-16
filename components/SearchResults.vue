@@ -1,6 +1,6 @@
 <template>
   <div :class="`flex flex-1 flex-col ${assetType}`">
-    <div v-if="status === 'pending'" class="asset-grid">
+    <div v-if="loadingStatus === 'pending'" class="asset-grid">
       <AssetSkeleton v-for="n in 25" :key="n" class="asset-grid__item" />
     </div>
     <div v-else-if="error" class="py-10 text-center text-red-500">
@@ -42,8 +42,9 @@ const props = defineProps<{
 }>();
 const intersectionRef = ref<HTMLElement | null>(null);
 
-const { assetType, assets, status, loadingMoreStatus, error, pagination, currentPage } =
+const { assetType, assets, loadingMoreStatus, error, pagination, currentPage } =
   usePaginatedAssets(props);
+const { loadingStatus } = useLoadingStatus()
 const { isLoggedIn } = useAuth();
 const { openAuthModal } = useAuthModal();
 
@@ -51,7 +52,7 @@ useIntersectionObserver(
   intersectionRef,
   () => {
     if (
-      status.value !== "pending" &&
+      loadingStatus.value !== "pending" &&
       loadingMoreStatus.value !== "pending" &&
       pagination.value !== null &&
       pagination.value.current_page < pagination.value.last_page
@@ -61,7 +62,7 @@ useIntersectionObserver(
   },
   { root: null, rootMargin: "400px", threshold: 0.01 },
   () =>
-    status.value !== "pending" &&
+    loadingStatus.value !== "pending" &&
     loadingMoreStatus.value !== "pending" &&
     pagination.value !== null &&
     pagination.value.current_page < pagination.value.last_page

@@ -21,26 +21,34 @@ export function getAssetType(
   }
 }
 
-export function getSearchResultsTitle(totalAssets = 0, slug: string | string[], query = "") {
-  const searchTerm = capitalize(query);
-  let title = "";
-  const _assetType = getAssetType(slug)
-  switch (_assetType) {
+function getAssetTypeLabel(assetType: string | undefined) {
+  switch (assetType) {
     case "3d":
-      title = `${formatNumber(totalAssets)} ${searchTerm} 3D Illustrations`;
-      break;
+      return "3D Illustrations";
     case "lottie":
-      title = `${formatNumber(totalAssets)} ${searchTerm} Animations`;
-      break;
+      return "Animations";
     case "illustration":
-      title = `${formatNumber(totalAssets)} ${searchTerm} Illustrations`;
-      break;
+      return "Illustrations";
     case "icon":
-      title = `${formatNumber(totalAssets)} ${searchTerm} Icons`;
-      break;
+      return "Icons";
     case "all":
     default:
-      title = `${formatNumber(totalAssets)} ${searchTerm} Design Assets`;
+      return "Design Assets";
   }
-  return title.trim();
+}
+
+export function getSearchResultsTitle(
+  totalAssets = 0,
+  slug: string | string[],
+  query = "",
+  loadingStatus: string
+) {
+  const searchTerm = capitalize(query);
+  const _assetType = getAssetType(slug);
+  const label = getAssetTypeLabel(_assetType);
+
+  if (loadingStatus === "pending") {
+    return `Searching ${searchTerm} ${label}`.trim();
+  }
+  return `${formatNumber(totalAssets)} ${searchTerm} ${label}`.trim();
 }

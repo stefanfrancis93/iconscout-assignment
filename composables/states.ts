@@ -165,10 +165,18 @@ export const usePagination = () => {
   }
 }
 
+export const useLoadingStatus = () => {
+  const loadingStatus = useState<"idle" | "pending" | "success" | "error">("loadingStatus", () => "idle");
+
+  return {
+    loadingStatus,
+  }
+}
+
 export function usePaginatedAssets(props: { slug: string[]; query: string }) {
   const assetType: string | undefined = getAssetType(props.slug);
   const assets = useState<Asset[]>("assets", () => []);
-  const status = useState<"idle" | "pending" | "success" | "error">("status", () => "idle");
+  const { loadingStatus } = useLoadingStatus()
   const loadingMoreStatus = useState<"idle" | "pending" | "success" | "error">("loadingMoreStatus", () => 
     "idle"
   );
@@ -179,7 +187,7 @@ export function usePaginatedAssets(props: { slug: string[]; query: string }) {
 
   async function fetchAssets({ page = 1, append = false } = {}) {
     const isFirstPage = page === 1;
-    (isFirstPage ? status : loadingMoreStatus).value = "pending";
+    (isFirstPage ? loadingStatus : loadingMoreStatus).value = "pending";
     error.value = null;
     try {
       const { data } = await useFetch<GetAssetsResponse>("/api/assets", {
@@ -199,13 +207,13 @@ export function usePaginatedAssets(props: { slug: string[]; query: string }) {
         pagination.value = data.value.pagination;
         lastLoadedPage.value = page;
         currentPage.value = page;
-        (isFirstPage ? status : loadingMoreStatus).value = "success";
+        (isFirstPage ? loadingStatus : loadingMoreStatus).value = "success";
       } else {
-        (isFirstPage ? status : loadingMoreStatus).value = "error";
+        (isFirstPage ? loadingStatus : loadingMoreStatus).value = "error";
       }
     } catch (e) {
       error.value = e;
-      (isFirstPage ? status : loadingMoreStatus).value = "error";
+      (isFirstPage ? loadingStatus : loadingMoreStatus).value = "error";
     }
   }
 
@@ -233,7 +241,6 @@ export function usePaginatedAssets(props: { slug: string[]; query: string }) {
 
   return {
     assets,
-    status,
     loadingMoreStatus,
     error,
     pagination,
