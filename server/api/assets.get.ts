@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     per_page = "50",
     page = "1",
     sort = "relevant",
-    price = "free"
+    price = "free",
   } = query;
 
   const url = new URL(`${API_BASE}/v3/search`);
@@ -67,7 +67,7 @@ export default defineEventHandler(async (event) => {
 
     const response: GetAssetsResponse = {
       status: data.status,
-      data: (asset === "lottie" ? lottieData : items?.data || []) as Asset[],
+      data: items?.data as Asset[],
       pagination: items
         ? {
             current_page: items.current_page,

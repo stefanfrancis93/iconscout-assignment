@@ -2,17 +2,30 @@
   <div>
     <div class="flex flex-col pt-6 pl-10 bg-white-600 gap-1 pb-6">
       <h1 class="text-black text-[35px] font-bold">
-        {{ getSearchResultsTitle(pagination?.total, route.params.slug, searchQuery, loadingStatus) }}
+        {{
+          getSearchResultsTitle(
+            pagination?.total,
+            route.params.slug,
+            searchQuery,
+            loadingStatus
+          )
+        }}
       </h1>
-      <p class="text-sm text-[#5A607D]">{{ `248 3Ds exclusively selected by our designer community.` }}</p>
+      <p class="text-sm text-[#5A607D] min-h-5">
+        {{
+          pagination?.total
+            ? `${pagination?.total} 3Ds exclusively selected by our designer community.`
+            : ""
+        }}
+      </p>
     </div>
     <div class="flex items-end sticky top-[70px] bg-white-600 z-10">
       <div
         :class="[
           'border-r border-b border-white-100 transition-all duration-300 ease-in-out flex items-center',
-          open ? 'w-[260px]' : 'w-12'
+          open ? 'w-[260px]' : 'w-12',
         ]"
-        style="overflow:hidden;"
+        style="overflow: hidden"
       >
         <UButton
           color="primary"
@@ -41,7 +54,9 @@
       <div
         :class="[
           'transition-all duration-300 ease-in-out',
-          open ? 'w-[260px] min-w-[260px] max-w-[260px]' : 'w-0 min-w-0 max-w-0 overflow-hidden'
+          open
+            ? 'w-[260px] min-w-[260px] max-w-[260px]'
+            : 'w-0 min-w-0 max-w-0 overflow-hidden',
         ]"
       >
         <SidebarFilters v-if="open" :slug="slug" />
@@ -50,7 +65,11 @@
         class="px-10 py-6 transition-all duration-300 ease-in-out"
         :class="open ? 'flex-1' : 'flex-1 w-full'"
       >
-        <SearchResults :slug="slug" :search-query="searchQuery" :query="route.query" />
+        <SearchResults
+          :slug="slug"
+          :search-query="searchQuery"
+          :query="route.query"
+        />
       </section>
     </div>
   </div>
@@ -59,33 +78,40 @@
 <script setup lang="ts">
 const route = useRoute();
 const slug: string[] = (route.params.slug as string[]) || [];
-const searchQuery: string = Array.isArray(slug) && slug.length > 1 ? slug[1] : "";
+const searchQuery: string =
+  Array.isArray(slug) && slug.length > 1 ? slug[1] : "";
 
 const { open, toggleSidebar } = useSidebar();
-const { pagination } = usePagination()
-const { loadingStatus } = useLoadingStatus()
+const { pagination } = usePagination();
+const { loadingStatus } = useLoadingStatus();
 </script>
 
 <style scoped>
-.fade-width-enter-active, .fade-width-leave-active {
+.fade-width-enter-active,
+.fade-width-leave-active {
   transition: opacity 0.2s;
 }
-.fade-width-enter-from, .fade-width-leave-to {
+.fade-width-enter-from,
+.fade-width-leave-to {
   opacity: 0;
   width: 0;
 }
-.fade-width-enter-to, .fade-width-leave-from {
+.fade-width-enter-to,
+.fade-width-leave-from {
   opacity: 1;
   width: auto;
 }
-.sidebar-slide-enter-active, .sidebar-slide-leave-active {
-  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+.sidebar-slide-enter-active,
+.sidebar-slide-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.sidebar-slide-enter-from, .sidebar-slide-leave-to {
+.sidebar-slide-enter-from,
+.sidebar-slide-leave-to {
   opacity: 0;
   transform: translateX(-100%);
 }
-.sidebar-slide-enter-to, .sidebar-slide-leave-from {
+.sidebar-slide-enter-to,
+.sidebar-slide-leave-from {
   opacity: 1;
   transform: translateX(0);
 }

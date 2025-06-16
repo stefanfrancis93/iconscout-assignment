@@ -1,28 +1,60 @@
 <template>
   <div :class="`flex flex-1 flex-col ${assetType}`">
     <div v-if="loadingStatus === 'pending'" class="asset-grid">
-      <AssetSkeleton v-for="n in (assetType === 'icon' ? 50 : 25)" :key="n" class="asset-grid__item" />
+      <AssetSkeleton
+        v-for="n in assetType === 'icon' ? 150 : 50"
+        :key="n"
+        class="asset-grid__item"
+      />
     </div>
     <div v-else-if="error" class="py-10 text-center text-red-500">
       Failed to load assets.
     </div>
     <template v-else-if="assets && assets.length">
       <div class="asset-grid">
-        <div v-for="(item, index) in assets" :key="`${item.id}-${index}`" class="flex h-full">
+        <div
+          v-for="(item, index) in assets"
+          :key="`${item.id}-${index}`"
+          class="flex h-full"
+        >
           <AssetCard :item="item" class="asset-grid__item" />
         </div>
-        <div v-if="!isLoggedIn" class="guest-sign-up">
-          <div class="relative z-10 px-8 py-8 flex flex-col items-center w-full max-w-md">
-            <h3 class="text-2xl font-bold mb-5 text-black">View all Limit 3D Illustrations</h3>
-            <UButton color="primary" variant="solid" class="h-[54px] w-full max-w-64 bg-brand justify-center text-lg font-semibold rounded-xl hover:bg-brand hover:brightness-110 cursor-pointer transition-all duration-200 ease-in-out active:brightness-95" @click="openAuthModal('signup')">
+        <div
+          v-if="!isLoggedIn && loadingStatus === 'pending'"
+          class="guest-sign-up"
+        >
+          <div
+            class="relative z-10 px-8 py-8 flex flex-col items-center w-full max-w-md"
+          >
+            <h3 class="text-2xl font-bold mb-5 text-black">
+              View all Limit 3D Illustrations
+            </h3>
+            <UButton
+              color="primary"
+              variant="solid"
+              class="h-[54px] w-full max-w-64 bg-brand justify-center text-lg font-semibold rounded-xl hover:bg-brand hover:brightness-110 cursor-pointer transition-all duration-200 ease-in-out active:brightness-95"
+              @click="openAuthModal('signup')"
+            >
               Get Started - It's Free
             </UButton>
-            <p class="text-lg text-gray-700 mt-1">Already have an account? <UButton color="primary" variant="ghost" class="text-lg font-semibold text-brand cursor-pointer" @click="openAuthModal('login')">Log In</UButton>
+            <p class="text-lg text-gray-700 mt-1">
+              Already have an account?
+              <UButton
+                color="primary"
+                variant="ghost"
+                class="text-lg font-semibold text-brand cursor-pointer"
+                @click="openAuthModal('login')"
+                >Log In</UButton
+              >
             </p>
           </div>
         </div>
       </div>
-      <div v-if="isLoggedIn" ref="intersectionRef" style="height: 1px"></div>
+      <div
+        v-if="isLoggedIn && assetType === 'lottie'"
+        ref="intersectionRef"
+        style="height: 1px"
+      ></div>
       <div v-if="loadingMoreStatus === 'pending'" class="text-center py-4">
         Loading more...
       </div>
@@ -33,20 +65,20 @@
 
 <script setup lang="ts">
 import { useIntersectionObserver } from "~/composables/useIntersectionObserver";
-import { useAuthModal } from '~/composables/useAuthModal';
+import { useAuthModal } from "~/composables/useAuthModal";
 import { useAuth } from "~/composables/states";
 import type { RouteLocationNormalizedGeneric } from "vue-router";
 
 const props = defineProps<{
   slug: string[];
   searchQuery: string;
-  query: RouteLocationNormalizedGeneric['query']
+  query: RouteLocationNormalizedGeneric["query"];
 }>();
 const intersectionRef = ref<HTMLElement | null>(null);
 
 const { assetType, assets, loadingMoreStatus, error, pagination, currentPage } =
   usePaginatedAssets(props);
-const { loadingStatus } = useLoadingStatus()
+const { loadingStatus } = useLoadingStatus();
 const { isLoggedIn } = useAuth();
 const { openAuthModal } = useAuthModal();
 
@@ -96,7 +128,12 @@ useIntersectionObserver(
   justify-content: flex-end;
   min-height: 25rem;
   padding: 2rem;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.9) 21.98%, rgba(255, 255, 255, 0.99) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.9) 21.98%,
+    rgba(255, 255, 255, 0.99) 100%
+  );
 }
 
 @media (max-width: 1023.98px) {
@@ -107,7 +144,7 @@ useIntersectionObserver(
 
 .icon .asset-grid {
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: .25rem;
+  gap: 0.3125rem;
 }
 
 .icon .asset-grid__item {

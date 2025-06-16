@@ -10,8 +10,8 @@
       class="flex items-center justify-center h-full w-full py-2 px-3 group"
     >
       <DotLottieVue
-        v-if="item.urls.lottie"
-        :src="item.urls.lottie"
+        v-if="item.urls.lottie || item.urls.original"
+        :src="item.urls.lottie || item.urls.original"
         :autoplay="true"
         :loop="true"
       />
@@ -22,7 +22,7 @@
         loop
         muted
         :alt="item.name"
-        class="w-32 h-32 object-contain mb-2"
+        class="w-full h-full"
       />
       <picture
         v-else-if="
@@ -33,26 +33,12 @@
         "
         class="thumb_PdMgf flex items-center justify-center h-full w-full relative overflow-hidden rounded-lg"
       >
-        <source
-          v-if="item.urls.thumb"
-          type="image/webp"
-          :srcset="`${item.urls.thumb}?f=webp 1x, ${item.urls.thumb}?f=webp 2x`"
-        />
+        <source v-if="fallbackImage" type="image/webp" :srcset="webpSrcSet" />
         <img
-          :id="`plp-asset-card-${item.id}`"
           :alt="item.name"
           loading="lazy"
-          :src="
-            item.urls.thumb ||
-            item.urls.png_256 ||
-            item.urls.png_128 ||
-            item.urls.png_64
-          "
-          :srcset="
-            item.urls.thumb
-              ? `${item.urls.thumb}?f=webp 1x, ${item.urls.thumb}?f=webp 2x`
-              : ''
-          "
+          :src="fallbackImage"
+          :srcset="webpSrcSet"
           :class="`w-full h-full max-w-full max-h-full object-contain transition-transform duration-300 ease-in-out pointer-events-none ${
             item.asset === '3d' ? 'group-hover:scale-105' : ''
           }`"
@@ -86,7 +72,23 @@ interface Props {
   item: Asset;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+const fallbackImage = computed(() => {
+  return (
+    props.item.urls.thumb ||
+    props.item.urls.png_256 ||
+    props.item.urls.png_128 ||
+    props.item.urls.png_64 ||
+    ""
+  );
+});
+
+const webpSrcSet = computed(() => {
+  return fallbackImage.value
+    ? `${fallbackImage.value}?f=webp 1x, ${fallbackImage.value}?f=webp 2x`
+    : "";
+});
 </script>
 
 <style scoped>
