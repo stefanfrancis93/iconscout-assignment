@@ -1,7 +1,7 @@
 <template>
   <ul
     role="tablist"
-    class="flex flex-row gap-8 bg-transparent items-center ml-[43px] mb-3 min-w-0 whitespace-nowrap"
+    class="hidden lg:flex flex-row gap-8 bg-transparent items-center ml-[43px] mb-3 min-w-0 whitespace-nowrap"
   >
     <li role="presentation">
       <NuxtLink

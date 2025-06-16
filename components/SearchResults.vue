@@ -1,7 +1,7 @@
 <template>
   <div :class="`flex flex-1 flex-col ${assetType}`">
     <div v-if="loadingStatus === 'pending'" class="asset-grid">
-      <AssetSkeleton v-for="n in 25" :key="n" class="asset-grid__item" />
+      <AssetSkeleton v-for="n in (assetType === 'icon' ? 50 : 25)" :key="n" class="asset-grid__item" />
     </div>
     <div v-else-if="error" class="py-10 text-center text-red-500">
       Failed to load assets.

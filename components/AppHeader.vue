@@ -1,19 +1,19 @@
 <template>
   <header
-    class="flex items-center justify-between px-6 py-3 bg-white shadow-[0px_6px_16px_0px_rgba(0,_0,_0,_0.08)] sticky top-0 z-10 h-[70px]"
+    class="flex items-center justify-between px-6 py-3 bg-white shadow-[0px_6px_16px_0px_rgba(0,_0,_0,_0.08)] sticky top-0 z-10 h-[70px] gap-4 md:gap-0"
     role="banner"
   >
-    <div class="flex gap-[29px] w-full">
+    <div class="flex gap-4 xl:gap-[29px] w-full">
       <a
         href="/"
-        class="flex items-center gap-2 w-[170px]"
+        class="flex items-center gap-2 w-[120px] md:w-[170px]"
         aria-label="IconScout Home"
       >
-        <img src="/logo.svg" alt="IconScout Logo" class="w-[170px]" />
+        <img src="/logo.svg" alt="IconScout Logo" class="w-[120px] md:min-w-[170px]" />
       </a>
       <UForm
         :state="{ searchQuery }"
-        class="w-full max-w-[360px]"
+        class="w-full max-w-none md:max-w-[360px]"
         @submit.prevent="onSearchSubmit"
       >
         <UButtonGroup
@@ -69,7 +69,7 @@
         :ui="{
           root: 'hidden xl:flex',
           item: 'p-0',
-          link: 'text-gray-550 hover:text-brand-darker text-base font-semibold gap-0 cursor-pointer',
+          link: 'text-gray-550 hover:text-brand-darker text-xs lg:text-base font-semibold gap-0 cursor-pointer p-1 lg:p-2.5',
           linkTrailingIcon: 'size-4',
         }"
       />
