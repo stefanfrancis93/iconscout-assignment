@@ -40,14 +40,14 @@ function getAssetTypeLabel(assetType: string | undefined) {
 export function getSearchResultsTitle(
   totalAssets = 0,
   slug: string | string[],
-  query = "",
+  searchQuery = "",
   loadingStatus: string
 ) {
-  const searchTerm = capitalize(query);
+  const searchTerm = capitalize(searchQuery);
   const _assetType = getAssetType(slug);
   const label = getAssetTypeLabel(_assetType);
 
-  if (loadingStatus === "pending") {
+  if (loadingStatus === "pending" || loadingStatus === "idle") {
     return `Searching ${searchTerm} ${label}`.trim();
   }
   return `${formatNumber(totalAssets)} ${searchTerm} ${label}`.trim();

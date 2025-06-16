@@ -42,7 +42,7 @@ export function useSearchQuery() {
     localStorage.setItem('recentSearches', JSON.stringify(recent));
     loadRecentSearches();
     showRecent.value = false;
-    router.push(`/3d-illustrations/${encodeURIComponent(query)}`);
+    router.push(`/search/3d-illustrations/${encodeURIComponent(query)}`);
   }
 
   function removeRecent(idx: number): void {

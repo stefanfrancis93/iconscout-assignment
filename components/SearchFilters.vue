@@ -61,7 +61,6 @@ import { getTabClass } from "~/utils/getTabClass";
 
 const props = defineProps<{
   slug: string[];
-  query: string;
   routePath: string;
 }>();
 const { setAssetFilter } = useFilters()

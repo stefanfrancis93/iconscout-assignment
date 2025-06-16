@@ -6,11 +6,7 @@
       <div
         class="flex items-center justify-between py-5 px-6 border-b border-white-100"
       >
-        <USwitch
-          v-model="filters.exclusive"
-          color="primary"
-          label="Iconscout Exclusive"
-        />
+        <USwitch color="primary" label="Iconscout Exclusive" />
       </div>
       <UAccordion
         type="multiple"
@@ -37,9 +33,9 @@
 
 <script setup lang="ts">
 import type { AccordionItem } from "@nuxt/ui";
-import { useFilters } from '~/composables/states';
+import { useFilters } from "~/composables/states";
 
-defineProps<{ slug: string[]; query: string }>();
+defineProps<{ slug: string[] }>();
 
 const { filters } = useFilters();
 
@@ -61,24 +57,23 @@ const accordionItems = [
     options: [
       { label: "Free", value: "free" },
       { label: "Premium", value: "premium" },
-      { label: "All", value: "all" },
     ],
   },
   {
     label: "View",
     slot: "item-view",
     options: [
-      { label: "Pack", value: "pack" },
       { label: "Individual", value: "individual" },
+      { label: "Pack", value: "pack" },
     ],
   },
   {
     label: "Sort by",
     slot: "item-sort",
     options: [
+      { label: "Relevant", value: "relevant" },
       { label: "Popular", value: "popular" },
       { label: "Latest", value: "latest" },
-      { label: "Relevant", value: "relevant" },
     ],
   },
 ] satisfies AccordionItem[];

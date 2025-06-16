@@ -2,7 +2,7 @@
   <div>
     <div class="flex flex-col pt-6 pl-10 bg-white-600">
       <h1 class="text-black text-[35px] font-bold">
-        {{ getSearchResultsTitle(pagination?.total, route.params.slug, query, loadingStatus) }}
+        {{ getSearchResultsTitle(pagination?.total, route.params.slug, searchQuery, loadingStatus) }}
       </h1>
     </div>
     <div class="flex items-end sticky top-[88px] bg-white-600 z-10">
@@ -34,7 +34,7 @@
           </transition>
         </UButton>
       </div>
-      <SearchFilters :slug="slug" :query="query" :route-path="route.path" />
+      <SearchFilters :slug="slug" :route-path="route.path" />
     </div>
     <div class="flex flex-row w-full">
       <div
@@ -43,13 +43,13 @@
           open ? 'w-[260px] min-w-[260px] max-w-[260px]' : 'w-0 min-w-0 max-w-0 overflow-hidden'
         ]"
       >
-        <SidebarFilters v-if="open" :slug="slug" :query="query" />
+        <SidebarFilters v-if="open" :slug="slug" />
       </div>
       <section
         class="px-10 py-6 transition-all duration-300 ease-in-out"
         :class="open ? 'flex-1' : 'flex-1 w-full'"
       >
-        <SearchResults :slug="slug" :query="query" />
+        <SearchResults :slug="slug" :search-query="searchQuery" :query="route.query" />
       </section>
     </div>
   </div>
@@ -58,7 +58,7 @@
 <script setup lang="ts">
 const route = useRoute();
 const slug: string[] = (route.params.slug as string[]) || [];
-const query: string = Array.isArray(slug) && slug.length > 1 ? slug[1] : "";
+const searchQuery: string = Array.isArray(slug) && slug.length > 1 ? slug[1] : "";
 
 const { open, toggleSidebar } = useSidebar();
 const { pagination } = usePagination()

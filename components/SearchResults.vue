@@ -35,10 +35,12 @@
 import { useIntersectionObserver } from "~/composables/useIntersectionObserver";
 import { useAuthModal } from '~/composables/useAuthModal';
 import { useAuth } from "~/composables/states";
+import type { RouteLocationNormalizedGeneric } from "vue-router";
 
 const props = defineProps<{
   slug: string[];
-  query: string;
+  searchQuery: string;
+  query: RouteLocationNormalizedGeneric['query']
 }>();
 const intersectionRef = ref<HTMLElement | null>(null);
 

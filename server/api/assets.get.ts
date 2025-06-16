@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
     per_page = "50",
     page = "1",
     sort = "relevant",
+    price = "free"
   } = query;
 
   const url = new URL(`${API_BASE}/v3/search`);
@@ -24,6 +25,7 @@ export default defineEventHandler(async (event) => {
   if (per_page != null) url.searchParams.set("per_page", String(per_page));
   if (page != null) url.searchParams.set("page", String(page));
   if (sort != null) url.searchParams.set("sort", String(sort));
+  if (price != null) url.searchParams.set("price", String(price));
 
   const headers = new Headers();
   headers.set("accept", "application/json");
