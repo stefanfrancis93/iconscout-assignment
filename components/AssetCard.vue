@@ -5,19 +5,16 @@
     :title="item.name"
     class="block rounded-lg bg-[#FAFAFC] relative w-full asset-card"
   >
-    <a
-      href="#"
-      tabindex="-1"
-      class="flex items-center justify-center h-full w-full py-2 px-3 group"
+    <div
+      v-if="showAsset"
+      class="flex items-center justify-center h-full w-full py-2 px-3 group cursor-pointer"
     >
-      <template v-if="item.urls.lottie || item.urls.original">
-        <DotLottieVue
-          v-if="showLottie"
-          :src="item.urls.lottie || item.urls.original"
-          :autoplay="true"
-          :loop="true"
-        />
-      </template>
+      <DotLottieVue
+        v-if="item.urls.lottie || item.urls.original"
+        :src="item.urls.lottie || item.urls.original"
+        :autoplay="true"
+        :loop="true"
+      />
       <video
         v-else-if="item.urls.thumb && item.urls.thumb.endsWith('.mp4')"
         :src="item.urls.thumb"
@@ -47,7 +44,7 @@
           }`"
         />
       </picture>
-    </a>
+    </div>
     <div class="asset-card__details">
       <UButton
         variant="soft"
@@ -76,7 +73,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const showLottie = ref(false);
+const showAsset = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver;
 
@@ -101,7 +98,7 @@ onMounted(() => {
 
   observer = new IntersectionObserver(
     ([entry]) => {
-      showLottie.value = entry.isIntersecting;
+      showAsset.value = entry.isIntersecting;
     },
     { threshold: 0.25 }
   );
