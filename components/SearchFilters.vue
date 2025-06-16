@@ -63,13 +63,13 @@ const props = defineProps<{
   slug: string[];
   routePath: string;
 }>();
-const { setAssetFilter } = useFilters()
+const { filters } = useFilters()
 
 function tabClass(base: string): string {
   return getTabClass(base, props.slug, props.routePath);
 }
 
 function onClickFilter(asset: string) {
-  setAssetFilter(asset)
+  filters.value.asset = asset
 }
 </script>

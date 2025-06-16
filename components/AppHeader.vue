@@ -11,85 +11,52 @@
       <img src="/logo.svg" alt="IconScout Logo" class="w-[170px]" />
     </a>
 
-    <form
-      class="flex items-center flex-1 max-w-xl mx-6 bg-white-400 rounded-lg px-2.5 py-2 gap-[9px] relative"
-      role="search"
-      aria-label="Asset search"
-      @submit.prevent="onSearchSubmit"
-    >
-      <label for="asset-search" class="sr-only">Search assets</label>
-      <UButton
-        type="button"
-        class="flex items-center gap-1 text-gray-700 font-semibold text-lg focus:outline-none bg-transparent border-0 px-0"
-        aria-haspopup="listbox"
-        aria-expanded="false"
+    <UForm :state="{ searchQuery }" @submit.prevent="onSearchSubmit">
+      <UButtonGroup
+        class="flex bg-white-100 items-center flex-1 max-w-[360px] mx-6 rounded-lg px-2.5 py-2 gap-[9px]"
       >
-        3D
-        <svg
-          class="w-4 h-4 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-        >
-          <path d="M19 9l-7 7-7-7" />
-        </svg>
-      </UButton>
-      <span class="h-8 w-px bg-[#C7CCE2] mx-2 size-6">
-        <img src="/search.svg" alt="Search" class="size-6" />
-      </span>
-
-      <input
-        id="asset-search"
-        v-model="searchQuery"
-        name="search"
-        type="text"
-        placeholder="Search from 8 Million+ assets"
-        class="flex-1 bg-transparent border-0 outline-none text-lg text-gray-800 placeholder-gray-500 px-2"
-        aria-label="Search from 8 Million+ assets"
-        autocomplete="off"
-        @focus="showRecent = true"
-        @blur="onBlur"
-        @keydown.enter="onSearchSubmit"
-      />
-
-      <div
-        v-if="showRecent && recentSearches.length"
-        class="absolute left-0 top-full mt-2 w-full bg-white rounded-lg shadow-lg z-10 p-4 min-w-[350px]"
-      >
-        <div class="mb-2 font-semibold text-gray-900 text-base">
-          Recent Search
-        </div>
-        <div class="flex flex-wrap gap-2 mb-2">
-          <span
-            v-for="(item, idx) in recentSearches"
-            :key="item"
-            class="flex items-center bg-gray-100 text-gray-800 rounded-lg px-3 py-1 text-sm cursor-pointer hover:bg-gray-200"
-            @mousedown.prevent="triggerRecentSearch(item)"
-          >
-            {{ item }}
-            <button
-              type="button"
-              class="ml-1 text-gray-400 hover:text-gray-600"
-              @mousedown.stop.prevent="removeRecent(idx)"
-            >
-              &times;
-            </button>
-          </span>
-        </div>
-      </div>
-      <UButton
-        type="button"
-        class="ml-2 flex justify-center w-12 h-12 rounded-lg shadow-none focus:outline-none m-0 p-0 size-12"
-        aria-label="Open asset search options"
-      >
-        <img
-          src="/reverse-image-search.svg"
-          alt="Reverse Image Search"
-          class="size-12"
+        <USelect
+          v-model="assetDropdownValue"
+          :items="assets"
+          variant="ghost"
+          class="cursor-pointer"
+          :ui="{ item: 'cursor-pointer' }"
         />
-      </UButton>
-    </form>
+        <USeparator
+          orientation="vertical"
+          class="h-7"
+          :ui="{ border: 'border-gray-50' }"
+        />
+        <UInput
+          v-model="searchQuery"
+          class="flex-1"
+          label="Search assets"
+          leading-icon="i-lucide-search"
+          placeholder="Search from 8 Million+ assets"
+          size="md"
+          name="searchQuery"
+          variant="ghost"
+          :ui="{
+            trailing: 'p-0',
+            base: 'bg-transparent hover:bg-transparent hover:cursor-text focus:bg-transparent placeholder:text-gray-500',
+          }"
+        >
+          <template #trailing>
+            <UButton
+              type="button"
+              class="ml-2 flex justify-center w-12 h-12 rounded-lg shadow-none focus:outline-none m-0 p-0 size-7.5 bg-transparent hover:bg-transparent"
+              aria-label="Open asset search options"
+            >
+              <img
+                src="public/reverse-image-search.svg"
+                alt="Reverse Image Search"
+                class="size-7.5"
+              />
+            </UButton>
+          </template>
+        </UInput>
+      </UButtonGroup>
+    </UForm>
 
     <nav aria-label="Main navigation" class="hidden xl:flex">
       <ul class="flex items-center gap-4">
@@ -139,6 +106,7 @@
         :ui="{
           content: 'w-48',
         }"
+        :modal="false"
       >
         <UButton
           color="neutral"
@@ -180,23 +148,33 @@
 </template>
 
 <script setup lang="ts">
-import { useSearchQuery } from "~/composables/useSearchQuery";
 import { useAuthModal } from "~/composables/useAuthModal";
 import { useAuth } from "~/composables/states";
 import type { DropdownMenuItem } from "@nuxt/ui";
 
-const {
-  searchQuery,
-  showRecent,
-  recentSearches,
-  onSearchSubmit,
-  removeRecent,
-  onBlur,
-  triggerRecentSearch,
-} = useSearchQuery();
-
 const { openAuthModal } = useAuthModal();
 const { isLoggedIn, logout } = useAuth();
+const route = useRoute();
+const router = useRouter();
+const assetType =
+  Array.isArray(route.params.slug) && route.params.slug.length > 0
+    ? decodeURIComponent(route.params.slug[0])
+    : "";
+const assetDropdownValue = ref(assetType);
+const assets = [
+  { label: "All", value: "all-assets" },
+  { label: "3D", value: "3d-illustrations" },
+  { label: "Lottie", value: "lottie-animations" },
+  { label: "Illustrations", value: "illustrations" },
+  { label: "Icons", value: "icons" },
+];
+const initialSearch =
+  (route.query.search as string) ||
+  (Array.isArray(route.params.slug) && route.params.slug.length > 1
+    ? decodeURIComponent(route.params.slug[1])
+    : "");
+
+const searchQuery = ref<string>(initialSearch);
 
 const dropdownItems = ref<DropdownMenuItem[][]>([
   [
@@ -208,4 +186,16 @@ const dropdownItems = ref<DropdownMenuItem[][]>([
     },
   ],
 ]);
+
+function onSearchSubmit() {
+  console.log({
+    assetDropdownValue: assetDropdownValue.value,
+    searchQuery: searchQuery.value,
+  });
+  const query = searchQuery.value.trim();
+  if (!query) return;
+  router.push(
+    `/search/${assetDropdownValue.value}/${encodeURIComponent(query)}`
+  );
+}
 </script>

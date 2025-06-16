@@ -139,13 +139,8 @@ export const useFilters = () => {
     }
   );
 
-  function setAssetFilter(asset: string) {
-    filters.value.asset = asset;
-  }
-
   return {
     filters,
-    setAssetFilter,
   };
 };
 

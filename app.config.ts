@@ -8,7 +8,8 @@ export default defineAppConfig({
         base: "cursor-pointer",
         item: "min-h-6 flex items-center cursor-pointer",
         label: "min-h-6 flex items-center cursor-pointer",
-        indicator: "border-1 border-brand-100 rounded-full after:bg-brand-100 cursor-pointer",
+        indicator:
+          "border-1 border-brand-100 rounded-full after:bg-brand-100 cursor-pointer",
       },
       variants: {
         color: {
@@ -32,6 +33,11 @@ export default defineAppConfig({
             base: "data-[state=checked]:bg-teal-500 cursor-pointer",
           },
         },
+      },
+    },
+    button: {
+      slots: {
+        base: "cursor-pointer",
       },
     },
   },
