@@ -117,8 +117,6 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthModal } from "~/composables/useAuthModal";
-import { useAuth } from "~/composables/states";
 import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui";
 
 const { openAuthModal } = useAuthModal();
