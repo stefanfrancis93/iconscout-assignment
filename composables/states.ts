@@ -1,3 +1,4 @@
+import { ASSET_FILTER_ENDPOINT_MAP } from "~/constants/assets";
 import type { Asset, GetAssetsResponse } from "~/shared/types/assets";
 import { getAssetType } from "~/utils/assets";
 import { shallowObjectComparison } from "~/utils/filters";
@@ -34,14 +35,6 @@ export const useAuth = () => {
     isLoggedIn,
     logout,
   };
-};
-
-const ASSET_FILTER_ENDPOINT_MAP = {
-  all: "all-assets",
-  "3d": "3d-illustrations",
-  lottie: "lottie-animations",
-  illustration: "illustrations",
-  icon: "icons",
 };
 
 export const useFilters = () => {

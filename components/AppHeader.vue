@@ -9,7 +9,11 @@
         class="flex items-center gap-2 w-[120px] md:w-[170px]"
         aria-label="IconScout Home"
       >
-        <img src="/logo.svg" alt="IconScout Logo" class="w-[120px] md:min-w-[170px]" />
+        <img
+          src="/logo.svg"
+          alt="IconScout Logo"
+          class="w-[120px] md:min-w-[170px]"
+        />
       </a>
       <UForm
         :state="{ searchQuery }"
@@ -25,7 +29,17 @@
             :items="assets"
             variant="ghost"
             class="cursor-pointer"
-            :ui="{ item: 'cursor-pointer' }"
+            :ui="{
+              item: 'cursor-pointer',
+              content: 'w-25',
+              base: 'hover:bg-transparent',
+            }"
+            :content="{
+              align: 'center',
+              side: 'bottom',
+              sideOffset: 10,
+            }"
+            @change="onChangeAssetFilter"
           />
           <USeparator
             orientation="vertical"
@@ -118,6 +132,7 @@
 
 <script setup lang="ts">
 import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui";
+import { ASSET_FILTER_ENDPOINT_MAP } from "~/constants/assets";
 
 const { openAuthModal } = useAuthModal();
 const { isLoggedIn, logout } = useAuth();
@@ -140,8 +155,8 @@ const initialSearch =
   (Array.isArray(route.params.slug) && route.params.slug.length > 1
     ? decodeURIComponent(route.params.slug[1])
     : "");
-
 const searchQuery = ref<string>(initialSearch);
+const { filters } = useFilters();
 
 const items = ref<NavigationMenuItem[][]>([
   [
@@ -185,5 +200,13 @@ function onSearchSubmit() {
   router.push(
     `/search/${assetDropdownValue.value}/${encodeURIComponent(query)}`
   );
+}
+
+function onChangeAssetFilter() {
+  const asset =
+    Object.keys(ASSET_FILTER_ENDPOINT_MAP).find(
+      (k) => ASSET_FILTER_ENDPOINT_MAP[k] === assetDropdownValue.value
+    ) ?? "all";
+  filters.value.asset = asset;
 }
 </script>
