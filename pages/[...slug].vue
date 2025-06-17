@@ -14,7 +14,9 @@
       <p class="text-sm text-[#5A607D] min-h-5">
         {{
           pagination?.total
-            ? `${formatNumber(pagination?.total)} 3Ds exclusively selected by our designer community.`
+            ? `${formatNumber(
+                pagination?.total
+              )} 3Ds exclusively selected by our designer community.`
             : ""
         }}
       </p>
@@ -69,6 +71,7 @@
           :assets="assets"
           :asset-type="assetType"
           :error="!!error"
+          :current-page="currentPage"
           :pagination="pagination"
           :loading-status="loadingStatus"
           :loading-more-status="loadingMoreStatus"
@@ -122,12 +125,23 @@ const loadingStatus = computed(() =>
 const loadingMoreStatus = ref<"idle" | "pending" | "success" | "error">("idle");
 const currentPage = ref(1);
 
-async function loadMore() {
-  if (!pagination.value || currentPage.value >= pagination.value.last_page)
+async function loadMore(page?: number) {
+  if (
+    !pagination.value ||
+    (page === undefined && currentPage.value >= pagination.value.last_page)
+  )
     return;
-  loadingMoreStatus.value = "pending";
+  if (page !== undefined) {
+    pending.value = true;
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  } else {
+    loadingMoreStatus.value = "pending";
+  }
   try {
-    const nextPage = currentPage.value + 1;
+    const nextPage = page ?? currentPage.value + 1;
     const params = new URLSearchParams({
       query: searchQuery,
       product_type: "item",
@@ -144,15 +158,19 @@ async function loadMore() {
       });
     if (moreError.value) throw moreError.value;
     if (moreData.value?.data?.length) {
-      data.value.data.push(...moreData.value.data);
+      if (page !== undefined) {
+        data.value.data = moreData.value.data;
+      } else {
+        data.value.data.push(...moreData.value.data);
+      }
       data.value.pagination = moreData.value.pagination;
-      currentPage.value = nextPage;
-      loadingMoreStatus.value = "success";
-    } else {
-      loadingMoreStatus.value = "success";
+      currentPage.value = data.value.pagination.current_page;
     }
+    loadingMoreStatus.value = "success";
   } catch (e) {
     loadingMoreStatus.value = "error";
+  } finally {
+    pending.value = false;
   }
 }
 </script>

@@ -50,12 +50,26 @@
           </div>
         </div>
       </div>
-      <div v-if="isLoggedIn" ref="intersectionRef" style="height: 1px"></div>
-      <div v-if="loadingMoreStatus === 'pending'" class="text-center py-4">
-        Loading more...
-      </div>
+      <template v-if="assetType === 'lottie'">
+        <div v-if="isLoggedIn" ref="intersectionRef" style="height: 1px"></div>
+        <div v-if="loadingMoreStatus === 'pending'" class="text-center py-4">
+          Loading more...
+        </div>
+      </template>
     </template>
     <div v-else class="py-10 text-center text-gray-400">No assets found.</div>
+    <UPagination
+      v-if="
+        isLoggedIn &&
+        assetType !== 'lottie' &&
+        ((loadingStatus === 'pending' && page > 1) || assets.length)
+      "
+      class="self-center mt-10 mb-5"
+      :page="page"
+      :items-per-page="assetType === 'icon' ? 200 : 80"
+      :total="pagination.total"
+      @update:page="onPaginationChange"
+    />
   </div>
 </template>
 
@@ -67,15 +81,23 @@ const props = defineProps<{
   assets: Asset[];
   assetType: string | undefined;
   error: boolean;
+  currentPage: number;
   loadingStatus: "idle" | "pending" | "success" | "error";
   loadingMoreStatus: "idle" | "pending" | "success" | "error";
   pagination: GetAssetsResponse["pagination"];
 }>();
-const emit = defineEmits(["load-more"]);
+const emit = defineEmits<{
+  "load-more": [page?: number];
+}>();
 
 const { isLoggedIn } = useAuth();
 const { openAuthModal } = useAuthModal();
 const intersectionRef = ref<HTMLElement | null>(null);
+const page = computed(() => props.currentPage);
+
+function onPaginationChange(_page: number) {
+  emit("load-more", _page);
+}
 
 useIntersectionObserver(
   intersectionRef,
