@@ -72,7 +72,7 @@ npm run preview
 - [x] Integrated IconScout API v3 for search and asset details
 - [x] Infinite loading for Lottie Animations tab
 - [x] Two search pages: Lottie player and Dotlottie player
-- [x] SSR enabled for SEO and performance. The page is [listed in the first page](files/google-results.png) for the search query "iconscout avatar".
+- [x] SSR enabled for SEO and performance. The page is [listed in the first page](files/google-results.png) for the search query "iconscout illustrations avatar".
 - [x] Header included
 - [x] Responsive and accessible design
 
