@@ -132,7 +132,6 @@
 
 <script setup lang="ts">
 import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui";
-import { ASSET_FILTER_ENDPOINT_MAP } from "~/constants/assets";
 
 const { openAuthModal } = useAuthModal();
 const { isLoggedIn, logout } = useAuth();
@@ -151,12 +150,10 @@ const assets = [
   { label: "Icons", value: "icons" },
 ];
 const initialSearch =
-  (route.query.search as string) ||
-  (Array.isArray(route.params.slug) && route.params.slug.length > 1
+  Array.isArray(route.params.slug) && route.params.slug.length > 1
     ? decodeURIComponent(route.params.slug[1])
-    : "");
+    : "";
 const searchQuery = ref<string>(initialSearch);
-const { filters } = useFilters();
 
 const items = ref<NavigationMenuItem[][]>([
   [
@@ -214,7 +211,7 @@ watch(
 function onChangeAssetFilter(filter) {
   router.push({
     path: `/search/${filter}/${searchQuery.value}`,
-    query: route.query
-  })
+    query: route.query,
+  });
 }
 </script>
