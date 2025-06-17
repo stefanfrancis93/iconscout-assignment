@@ -76,7 +76,7 @@ npm run preview
 - [x] Header included
 - [x] Responsive and accessible design
 
-## Pending / Improvements
+## Improvements
 - [ ] Add more comprehensive unit tests
 - [ ] Enhance error handling
 - [ ] Add user authentication for personalized features
