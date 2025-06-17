@@ -39,7 +39,7 @@
               side: 'bottom',
               sideOffset: 10,
             }"
-            @change="onChangeAssetFilter"
+            @update:model-value="onChangeAssetFilter"
           />
           <USeparator
             orientation="vertical"
@@ -211,11 +211,10 @@ watch(
   }
 );
 
-function onChangeAssetFilter() {
-  const asset =
-    Object.keys(ASSET_FILTER_ENDPOINT_MAP).find(
-      (k) => ASSET_FILTER_ENDPOINT_MAP[k] === assetDropdownValue.value
-    ) ?? "all";
-  filters.value.asset = asset;
+function onChangeAssetFilter(filter) {
+  router.push({
+    path: `/search/${filter}/${searchQuery.value}`,
+    query: route.query
+  })
 }
 </script>
