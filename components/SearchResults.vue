@@ -2,7 +2,7 @@
   <div :class="`flex flex-1 flex-col ${assetType}`">
     <div v-if="loadingStatus === 'pending'" class="asset-grid">
       <AssetSkeleton
-        v-for="n in assetType === 'icon' ? 150 : 50"
+        v-for="n in assetType === 'icon' ? 200 : 80"
         :key="n"
         class="asset-grid__item"
       />
@@ -60,9 +60,10 @@
 </template>
 
 <script setup lang="ts">
-import { useIntersectionObserver } from "~/composables/useIntersectionObserver";
+import { getAssetType } from "~/utils/assets";
 import { useAuthModal } from "~/composables/useAuthModal";
 import { useAuth } from "~/composables/states";
+import type { Asset, GetAssetsResponse } from "~/shared/types/assets";
 import type { RouteLocationNormalizedGeneric } from "vue-router";
 
 const props = defineProps<{
@@ -70,25 +71,83 @@ const props = defineProps<{
   searchQuery: string;
   query: RouteLocationNormalizedGeneric["query"];
 }>();
-const intersectionRef = ref<HTMLElement | null>(null);
 
-const { assetType, assets, loadingMoreStatus, error, pagination, currentPage } =
-  usePaginatedAssets(props);
-const { loadingStatus } = useLoadingStatus();
+const assetType = computed(() => getAssetType(props.slug));
+
+const { data, pending, error } = await useLazyFetch<GetAssetsResponse>(
+  () => {
+    const params = new URLSearchParams({
+      query: props.searchQuery,
+      product_type: "item",
+      asset: assetType.value || '',
+      page: "1",
+      per_page: assetType.value === "icon" ? "200" : "80",
+      price: (props.query.price as string) || "",
+      view: (props.query.view as string) || "",
+      sort: (props.query.sort as string) || "",
+    });
+    return `/api/assets?${params.toString()}`;
+  },
+  {
+    watch: [() => props.searchQuery, () => assetType.value, () => props.query],
+    default: () => ({ data: [], pagination: null }),
+    server: true,
+    lazy: false,
+  }
+);
+
+const assets = computed<Asset[]>(() => data.value?.data || []);
+const pagination = computed(() => data.value?.pagination);
+const loadingStatus = computed(() =>
+  pending.value ? "pending" : error.value ? "error" : "success"
+);
+
 const { isLoggedIn } = useAuth();
 const { openAuthModal } = useAuthModal();
+
+const intersectionRef = ref<HTMLElement | null>(null);
+const loadingMoreStatus = ref<"idle" | "pending" | "success" | "error">("idle");
+const currentPage = ref(1);
+
+async function loadMore() {
+  if (!pagination.value || currentPage.value >= pagination.value.last_page)
+    return;
+  loadingMoreStatus.value = "pending";
+  try {
+    const nextPage = currentPage.value + 1;
+    const params = new URLSearchParams({
+      query: props.searchQuery,
+      product_type: "item",
+      asset: assetType.value || '',
+      page: String(nextPage),
+      per_page: assetType.value === "icon" ? "200" : "80",
+      price: (props.query.price as string) || "",
+      view: (props.query.view as string) || "",
+      sort: (props.query.sort as string) || "",
+    });
+    const { data: moreData, error: moreError } =
+      await useFetch<GetAssetsResponse>(`/api/assets?${params.toString()}`, {
+        server: false,
+      });
+    if (moreError.value) throw moreError.value;
+    if (moreData.value?.data?.length) {
+      data.value.data.push(...moreData.value.data);
+      data.value.pagination = moreData.value.pagination;
+      currentPage.value = nextPage;
+      loadingMoreStatus.value = "success";
+    } else {
+      
+      loadingMoreStatus.value = "success";
+    }
+  } catch (e) {
+    loadingMoreStatus.value = "error";
+  }
+}
 
 useIntersectionObserver(
   intersectionRef,
   () => {
-    if (
-      loadingStatus.value !== "pending" &&
-      loadingMoreStatus.value !== "pending" &&
-      pagination.value !== null &&
-      pagination.value.current_page < pagination.value.last_page
-    ) {
-      currentPage.value += 1;
-    }
+    loadMore();
   },
   { root: null, rootMargin: "400px", threshold: 0.01 },
   () =>
