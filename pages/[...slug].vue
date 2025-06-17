@@ -14,7 +14,7 @@
       <p class="text-sm text-[#5A607D] min-h-5">
         {{
           pagination?.total
-            ? `${pagination?.total} 3Ds exclusively selected by our designer community.`
+            ? `${formatNumber(pagination?.total)} 3Ds exclusively selected by our designer community.`
             : ""
         }}
       </p>

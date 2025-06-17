@@ -47,7 +47,7 @@ export function getSearchResultsTitle(
   const _assetType = getAssetType(slug);
   const label = getAssetTypeLabel(_assetType);
 
-  if (loadingStatus === "pending" || loadingStatus === "idle") {
+  if (loadingStatus === "pending") {
     return `Searching ${searchTerm} ${label}`.trim();
   }
   return `${formatNumber(totalAssets)} ${searchTerm} ${label}`.trim();
