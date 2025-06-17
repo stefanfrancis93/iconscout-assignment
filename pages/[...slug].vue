@@ -93,6 +93,7 @@ const searchQuery: string =
 
 const { open, toggleSidebar } = useSidebar();
 const assetType = computed(() => getAssetType(slug));
+const router = useRouter()
 
 const { data, pending, error } = await useLazyFetch<GetAssetsResponse>(
   () => {
@@ -173,6 +174,21 @@ async function loadMore(page?: number) {
     pending.value = false;
   }
 }
+
+const allowedRoutes = [
+  'all-assets',
+  '3d-illustrations',
+  'lottie-animations',
+  'illustrations',
+  'icons',
+];
+
+onBeforeMount(() => {
+  const mainSlug = Array.isArray(slug) && slug.length > 0 ? slug[0] : '';
+  if (!allowedRoutes.includes(mainSlug)) {
+    router.replace('/all-assets');
+  }
+});
 
 const assetTypeTitles: Record<string, string> = {
   "3d": "3D Illustrations - Free Download in PNG, glTF | IconScout",
