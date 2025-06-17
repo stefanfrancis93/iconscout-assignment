@@ -11,7 +11,6 @@
 
 <script setup lang="ts">
 import AuthModal from '~/components/AuthModal.vue'
-import { useAuthModal } from '~/composables/useAuthModal'
 
 const { showAuthModal, authMode, closeAuthModal } = useAuthModal()
 </script>

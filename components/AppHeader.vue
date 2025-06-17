@@ -193,10 +193,7 @@ const dropdownItems = ref<DropdownMenuItem[][]>([
 
 function onSearchSubmit() {
   const query = searchQuery.value.trim();
-  if (!query) return;
-  router.push(
-    `/${assetDropdownValue.value}/${encodeURIComponent(query)}`
-  );
+  router.push(`/${assetDropdownValue.value}/${encodeURIComponent(query)}`);
 }
 
 watch(

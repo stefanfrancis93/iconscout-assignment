@@ -55,3 +55,19 @@ export const useLoadingStatus = () => {
     loadingStatus,
   };
 };
+
+export function useAuthModal() {
+  const showAuthModal = useState("showAuthModal", () => false);
+  const authMode = useState<"login" | "signup">("authMode", () => "login");
+
+  function openAuthModal(mode: "login" | "signup" = "login") {
+    authMode.value = mode;
+    showAuthModal.value = true;
+  }
+
+  function closeAuthModal() {
+    showAuthModal.value = false;
+  }
+
+  return { showAuthModal, authMode, openAuthModal, closeAuthModal };
+}

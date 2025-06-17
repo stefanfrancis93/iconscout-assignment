@@ -60,7 +60,6 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthModal } from "~/composables/useAuthModal";
 import { useAuth } from "~/composables/states";
 import type { Asset, GetAssetsResponse } from "~/shared/types/assets";
 
