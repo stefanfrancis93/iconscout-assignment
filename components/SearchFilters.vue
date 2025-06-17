@@ -36,7 +36,7 @@ const activeClass =
 function isActive(filterValue: string) {
   return route.params.slug && Array.isArray(route.params.slug)
     ? route.params.slug[0] === filterValue
-    : filterValue === 'all-assets' && route.path === '/search/all-assets';
+    : filterValue === 'all-assets' && route.path === '/all-assets';
 }
 
 function onClickFilter(filter: string) {
@@ -45,7 +45,7 @@ function onClickFilter(filter: string) {
       ? decodeURIComponent(route.params.slug[1])
       : '';
   router.push({
-    path: `/search/${filter}/${searchQuery}`,
+    path: `/${filter}/${searchQuery}`,
     query: route.query,
   });
 }

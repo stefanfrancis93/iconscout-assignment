@@ -18,11 +18,11 @@ export default defineNuxtConfig({
   },
   sitemap: {
     urls: [
-      { loc: "/search/all-assets", lastmod: new Date() },
-      { loc: "/search/3d-illustrations", lastmod: new Date() },
-      { loc: "/search/lottie-animations", lastmod: new Date() },
-      { loc: "/search/illustrations", lastmod: new Date() },
-      { loc: "/search/icons", lastmod: new Date() },
+      { loc: "/all-assets", lastmod: new Date() },
+      { loc: "/3d-illustrations", lastmod: new Date() },
+      { loc: "/lottie-animations", lastmod: new Date() },
+      { loc: "/illustrations", lastmod: new Date() },
+      { loc: "/icons", lastmod: new Date() },
     ],
   },
   app: {

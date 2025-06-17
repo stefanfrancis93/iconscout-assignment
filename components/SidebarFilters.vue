@@ -60,7 +60,7 @@ watch(
     ) {
       const lottieFormat = route.query.lottieFormat;
       const routeSplit = route.path.split("/");
-      const path = routeSplit.map((r, i) => (i === 2 ? asset : r)).join("/");
+      const path = routeSplit.map((r, i) => (i === 1 ? asset : r)).join("/");
       const routeQuery = route.query;
       router.push({
         path,

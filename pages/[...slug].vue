@@ -66,9 +66,13 @@
         :class="open ? 'flex-1' : 'flex-1 w-full'"
       >
         <SearchResults
-          :slug="slug"
-          :search-query="searchQuery"
-          :query="route.query"
+          :assets="assets"
+          :asset-type="assetType"
+          :error="!!error"
+          :pagination="pagination"
+          :loading-status="loadingStatus"
+          :loading-more-status="loadingMoreStatus"
+          @load-more="loadMore"
         />
       </section>
     </div>
@@ -76,14 +80,81 @@
 </template>
 
 <script setup lang="ts">
+import { getAssetType } from "~/utils/assets";
+import type { Asset, GetAssetsResponse } from "~/shared/types/assets";
+
 const route = useRoute();
 const slug: string[] = (route.params.slug as string[]) || [];
 const searchQuery: string =
   Array.isArray(slug) && slug.length > 1 ? slug[1] : "";
 
 const { open, toggleSidebar } = useSidebar();
-const { pagination } = usePagination();
-const { loadingStatus } = useLoadingStatus();
+const assetType = computed(() => getAssetType(slug));
+
+const { data, pending, error } = await useLazyFetch<GetAssetsResponse>(
+  () => {
+    const params = new URLSearchParams({
+      query: searchQuery,
+      product_type: "item",
+      asset: assetType.value || "",
+      page: "1",
+      per_page: assetType.value === "icon" ? "200" : "80",
+      price: (route.query.price as string) || "",
+      view: (route.query.view as string) || "",
+      sort: (route.query.sort as string) || "",
+    });
+    return `/api/assets?${params.toString()}`;
+  },
+  {
+    watch: [() => searchQuery, () => assetType.value, () => route.query],
+    default: () => ({ data: [], pagination: null }),
+    server: true,
+    lazy: false,
+  }
+);
+
+const assets = computed<Asset[]>(() => data.value?.data || []);
+const pagination = computed(() => data.value?.pagination);
+const loadingStatus = computed(() =>
+  pending.value ? "pending" : error.value ? "error" : "success"
+);
+
+const loadingMoreStatus = ref<"idle" | "pending" | "success" | "error">("idle");
+const currentPage = ref(1);
+
+async function loadMore() {
+  if (!pagination.value || currentPage.value >= pagination.value.last_page)
+    return;
+  loadingMoreStatus.value = "pending";
+  try {
+    const nextPage = currentPage.value + 1;
+    const params = new URLSearchParams({
+      query: searchQuery,
+      product_type: "item",
+      asset: assetType.value || "",
+      page: String(nextPage),
+      per_page: assetType.value === "icon" ? "200" : "80",
+      price: (route.query.price as string) || "",
+      view: (route.query.view as string) || "",
+      sort: (route.query.sort as string) || "",
+    });
+    const { data: moreData, error: moreError } =
+      await useFetch<GetAssetsResponse>(`/api/assets?${params.toString()}`, {
+        server: false,
+      });
+    if (moreError.value) throw moreError.value;
+    if (moreData.value?.data?.length) {
+      data.value.data.push(...moreData.value.data);
+      data.value.pagination = moreData.value.pagination;
+      currentPage.value = nextPage;
+      loadingMoreStatus.value = "success";
+    } else {
+      loadingMoreStatus.value = "success";
+    }
+  } catch (e) {
+    loadingMoreStatus.value = "error";
+  }
+}
 </script>
 
 <style scoped>

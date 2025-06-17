@@ -195,7 +195,7 @@ function onSearchSubmit() {
   const query = searchQuery.value.trim();
   if (!query) return;
   router.push(
-    `/search/${assetDropdownValue.value}/${encodeURIComponent(query)}`
+    `/${assetDropdownValue.value}/${encodeURIComponent(query)}`
   );
 }
 
@@ -210,7 +210,7 @@ watch(
 
 function onChangeAssetFilter(filter) {
   router.push({
-    path: `/search/${filter}/${searchQuery.value}`,
+    path: `/${filter}/${searchQuery.value}`,
     query: route.query,
   });
 }
