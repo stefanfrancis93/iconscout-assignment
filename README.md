@@ -90,7 +90,7 @@ npm run preview
 | **Bundle Size**       | \~95.6kB + large `.json` files          | \~59.5kB + small `.lottie` files            |
 | **Performance**       | Slower loading, heavier network payload | Faster loading, optimized for web           |
 | **Ideal Use**         | Simple pages or prototypes              | Infinite scroll, production-heavy UIs       |
-| **Real life example** | [videos/lottie-files.mov](video)        | [videos/dotlottie-wc.mov](video)            |
+| **Real life example** | [video](videos/lottie-files.mov)        | [video](videos/dotlottie-wc.mov)            |
 
 ---
 
