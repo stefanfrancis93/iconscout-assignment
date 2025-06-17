@@ -1,4 +1,3 @@
-import { ASSET_FILTER_ENDPOINT_MAP } from "~/constants/assets";
 import type { Asset, GetAssetsResponse } from "~/shared/types/assets";
 import { getAssetType } from "~/utils/assets";
 import { shallowObjectComparison } from "~/utils/filters";
@@ -34,62 +33,6 @@ export const useAuth = () => {
   return {
     isLoggedIn,
     logout,
-  };
-};
-
-export const useFilters = () => {
-  const route = useRoute();
-  const assetFilter =
-    route.params.slug?.length > 0
-      ? Object.keys(ASSET_FILTER_ENDPOINT_MAP).find(
-          (k) => ASSET_FILTER_ENDPOINT_MAP[k] === route.params.slug?.[0]
-        ) ?? "all"
-      : "all";
-  const {
-    price: priceFilter = "free",
-    view: viewFilter = "individual",
-    sort: sortFilter = "relevant",
-  } = route.query ?? {};
-  const filters = useState("filters", () => ({
-    asset: assetFilter,
-    price: priceFilter,
-    view: viewFilter,
-    sort: sortFilter,
-  }));
-
-  watch(
-    filters,
-    (newFilters) => {
-      if (route.path === "/") return;
-      const { asset, price, view, sort } = newFilters ?? {};
-      const { lottieFormat } = route.query;
-
-      const currentRoute = useRoute();
-      const router = useRouter();
-
-      const routeSplit = currentRoute.path.split("/");
-      const path = routeSplit
-        .map((r, i) => (i === 2 ? ASSET_FILTER_ENDPOINT_MAP[asset] : r))
-        .join("/");
-
-      router.push({
-        path,
-        query: {
-          price,
-          view,
-          sort,
-          lottieFormat,
-        },
-      });
-    },
-    {
-      immediate: true,
-      deep: true,
-    }
-  );
-
-  return {
-    filters,
   };
 };
 

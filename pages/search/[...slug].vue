@@ -48,7 +48,7 @@
           </transition>
         </UButton>
       </div>
-      <SearchFilters :slug="slug" :route-path="route.path" />
+      <SearchFilters />
     </div>
     <div class="flex flex-row w-full">
       <div
@@ -59,7 +59,7 @@
             : 'w-0 min-w-0 max-w-0 overflow-hidden',
         ]"
       >
-        <SidebarFilters v-if="open" :slug="slug" />
+        <SidebarFilters v-if="open" />
       </div>
       <section
         class="px-10 py-6 transition-all duration-300 ease-in-out"

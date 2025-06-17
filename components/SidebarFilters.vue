@@ -15,16 +15,16 @@
         class="ui-accordion-filters"
       >
         <template #item-asset="{ item }">
-          <URadioGroup v-model="filters.asset" :items="item.options" />
+          <URadioGroup v-model="localFilters.asset" :items="item.options" />
         </template>
         <template #item-price="{ item }">
-          <URadioGroup v-model="filters.price" :items="item.options" />
+          <URadioGroup v-model="localFilters.price" :items="item.options" />
         </template>
         <template #item-view="{ item }">
-          <URadioGroup v-model="filters.view" :items="item.options" />
+          <URadioGroup v-model="localFilters.view" :items="item.options" />
         </template>
         <template #item-sort="{ item }">
-          <URadioGroup v-model="filters.sort" :items="item.options" />
+          <URadioGroup v-model="localFilters.sort" :items="item.options" />
         </template>
       </UAccordion>
     </UForm>
@@ -33,22 +33,59 @@
 
 <script setup lang="ts">
 import type { AccordionItem } from "@nuxt/ui";
-import { useFilters } from "~/composables/states";
 
-defineProps<{ slug: string[] }>();
+const route = useRoute();
+const router = useRouter();
 
-const { filters } = useFilters();
+const localFilters = ref({
+  asset: route.params.slug?.length > 0 ? route.params.slug?.[0] : "all-assets",
+  price: (route.query.price as string) || "free",
+  view: (route.query.view as string) || "individual",
+  sort: (route.query.sort as string) || "relevant",
+});
+
+watch(
+  [
+    () => localFilters.value.asset,
+    () => localFilters.value.price,
+    () => localFilters.value.view,
+    () => localFilters.value.sort,
+  ],
+  ([asset, price, view, sort], [oldAsset, oldPrice, oldView, oldSort]) => {
+    if (
+      asset !== oldAsset ||
+      price !== oldPrice ||
+      view !== oldView ||
+      sort !== oldSort
+    ) {
+      const lottieFormat = route.query.lottieFormat;
+      const routeSplit = route.path.split("/");
+      const path = routeSplit.map((r, i) => (i === 2 ? asset : r)).join("/");
+      const routeQuery = route.query;
+      router.push({
+        path,
+        query: {
+          ...routeQuery,
+          price,
+          view,
+          sort,
+          ...(lottieFormat ? { lottieFormat } : {}),
+        },
+      });
+    }
+  }
+);
 
 const accordionItems = [
   {
     label: "Asset",
     slot: "item-asset",
     options: [
-      { label: "All asset", value: "all" },
-      { label: "3D Illustrations", value: "3d" },
-      { label: "Lottie Animations", value: "lottie" },
-      { label: "Illustrations", value: "illustration" },
-      { label: "Icons", value: "icon" },
+      { label: "All asset", value: "all-assets" },
+      { label: "3D Illustrations", value: "3d-illustrations" },
+      { label: "Lottie Animations", value: "lottie-animations" },
+      { label: "Illustrations", value: "illustrations" },
+      { label: "Icons", value: "icons" },
     ],
   },
   {

@@ -17,10 +17,6 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  slug: string[];
-  routePath: string;
-}>();
 const route = useRoute();
 const router = useRouter();
 
