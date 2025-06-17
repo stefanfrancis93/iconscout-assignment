@@ -100,4 +100,9 @@ export default defineNuxtConfig({
     description:
       "Curated SVGs, Vector Icons, Illustrations, 3D Graphics, and Lottie Animations. Over 10,000+ new assets added every day. Integrated plugins, tools, editors, and more.",
   },
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => ["lottie-player", "dotlottie-wc"].includes(tag),
+    },
+  },
 });

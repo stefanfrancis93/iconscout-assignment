@@ -9,9 +9,10 @@
       v-if="showAsset"
       class="flex items-center justify-center h-full w-full py-2 px-3 group cursor-pointer"
     >
-      <DotLottieVue
-        v-if="item.urls.lottie || item.urls.original"
-        :src="getLottieSrc"
+      <component
+        :is="lottieAsset && lottieAsset.component"
+        v-if="lottieAsset"
+        :src="lottieAsset.src"
         :autoplay="true"
         :loop="true"
       />
@@ -65,7 +66,6 @@
 </template>
 
 <script setup lang="ts">
-import { DotLottieVue } from "@lottiefiles/dotlottie-vue";
 import type { Asset } from "~/shared/types/assets";
 
 interface Props {
@@ -78,6 +78,22 @@ const props = defineProps<Props>();
 const showAsset = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver;
+
+const lottieAsset = computed(() => {
+  if (lottieFormat === 'lottie' && props.item.urls.lottie) {
+    return { component: 'dotlottie-wc', src: props.item.urls.lottie };
+  }
+  if (lottieFormat === 'original' && props.item.urls.original) {
+    return { component: 'lottie-player', src: props.item.urls.original };
+  }
+  if (!lottieFormat && props.item.urls.lottie) {
+    return { component: 'dotlottie-wc', src: props.item.urls.lottie };
+  }
+  if (!lottieFormat && !props.item.urls.lottie && props.item.urls.original) {
+    return { component: 'lottie-player', src: props.item.urls.original };
+  }
+  return null;
+});
 
 const fallbackImage = computed(() => {
   return (
@@ -94,12 +110,6 @@ const webpSrcSet = computed(() => {
     ? `${fallbackImage.value}?f=webp 1x, ${fallbackImage.value}?f=webp 2x`
     : "";
 });
-
-const getLottieSrc = computed(() =>
-  lottieFormat
-    ? props.item.urls[typeof lottieFormat === "string" ? lottieFormat : lottieFormat[0]]
-    : props.item.urls.lottie || props.item.urls.original
-);
 
 onMounted(() => {
   if (!containerRef.value) return;
