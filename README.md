@@ -72,7 +72,7 @@ npm run preview
 - [x] Integrated IconScout API v3 for search and asset details
 - [x] Infinite loading for Lottie Animations tab
 - [x] Two search pages: Lottie player and Dotlottie player
-- [x] SSR enabled for SEO and performance
+- [x] SSR enabled for SEO and performance. The page is [listed in the first page](files/google-results.png) for the search query "iconscout avatar".
 - [x] Header included
 - [x] Responsive and accessible design
 
@@ -90,7 +90,7 @@ npm run preview
 | **Bundle Size**       | \~95.6kB + large `.json` files          | \~59.5kB + small `.lottie` files            |
 | **Performance**       | Slower loading, heavier network payload | Faster loading, optimized for web           |
 | **Ideal Use**         | Simple pages or prototypes              | Infinite scroll, production-heavy UIs       |
-| **Real life example** | [video](videos/lottie-files.mov)        | [video](videos/dotlottie-wc.mov)            |
+| **Real life example** | [video](files/lottie-files.mov)        | [video](files/dotlottie-wc.mov)            |
 
 ---
 
