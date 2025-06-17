@@ -173,6 +173,30 @@ async function loadMore(page?: number) {
     pending.value = false;
   }
 }
+
+const assetTypeTitles: Record<string, string> = {
+  "3d": "3D Illustrations - Free Download in PNG, glTF | IconScout",
+  lottie: "Animations - Free Download in GIF, Lottie JSON | IconScout",
+  illustration: "Illustrations - Free Download in SVG, PNG | IconScout",
+  icon: "Icons, Logos, Symbols - Free Download in SVG, PNG | IconScout",
+};
+
+const pageInfo = computed(() => {
+  const page = pagination.value?.current_page || 1;
+  return assetType.value !== "lottie" && page > 1 ? `Page ${page} | ` : "";
+});
+
+const headTitle = computed(() => {
+  const type = assetType.value;
+  const title =
+    assetTypeTitles[type] ||
+    "Design Assets - Free Download in SVG, PNG, BLEND, GIF | IconScout";
+  return `${pageInfo.value}${title}`;
+});
+
+useHead({
+  title: headTitle,
+});
 </script>
 
 <style scoped>
