@@ -138,7 +138,7 @@ const { openAuthModal } = useAuthModal();
 const { isLoggedIn, logout } = useAuth();
 const route = useRoute();
 const router = useRouter();
-const assetDropdownValue = computed(() =>
+const assetDropdownValue = ref<string>(
   Array.isArray(route.params.slug) && route.params.slug.length > 0
     ? decodeURIComponent(route.params.slug[0])
     : "all-assets"
@@ -201,6 +201,15 @@ function onSearchSubmit() {
     `/search/${assetDropdownValue.value}/${encodeURIComponent(query)}`
   );
 }
+
+watch(
+  () => route.params.slug,
+  (newSlug) => {
+    if (Array.isArray(newSlug) && newSlug.length > 0) {
+      assetDropdownValue.value = decodeURIComponent(newSlug[0]);
+    }
+  }
+);
 
 function onChangeAssetFilter() {
   const asset =

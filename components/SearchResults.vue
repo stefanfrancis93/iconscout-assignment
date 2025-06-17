@@ -50,11 +50,7 @@
           </div>
         </div>
       </div>
-      <div
-        v-if="isLoggedIn && assetType === 'lottie'"
-        ref="intersectionRef"
-        style="height: 1px"
-      ></div>
+      <div v-if="isLoggedIn" ref="intersectionRef" style="height: 1px"></div>
       <div v-if="loadingMoreStatus === 'pending'" class="text-center py-4">
         Loading more...
       </div>
